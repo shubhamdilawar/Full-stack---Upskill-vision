@@ -1,0 +1,52 @@
+.dashboard-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #f5f5f5;
+    padding: 2rem;
+    text-align: center;
+  }
+  
+  h1 {
+    color: #0288d1;
+    margin-bottom: 1rem;
+  }
+  
+  p {
+    color: #555;
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+  }
+  
+  .dashboard-actions button {
+    margin: 0.5rem;
+    padding: 0.8rem 1.5rem;
+    background-color: #0288d1;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+  }
+  
+  .dashboard-actions button:hover {
+    background-color: #026aa7;
+  }
+  
+  .logout-btn {
+    margin-top: 2rem;
+    padding: 0.8rem 1.5rem;
+    background-color: #f44336;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+  }
+  
+  .logout-btn:hover {
+    background-color: #d32f2f;
+  }
+  

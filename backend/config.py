@@ -1,6 +1,11 @@
-import os
-
 class Config:
-    SECRET_KEY = os.getenv('SECRET_KEY', 'supersecretkey')
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///app.db'
-    SQLALCHEMY_TRACK_MODIFICATIONS = False
+    # Database Configuration
+    DATABASE_URI = "sqlite:///users.db"
+
+    # Email Configuration
+    MAIL_SERVER = "smtp.gmail.com"
+    MAIL_PORT = 587
+    MAIL_USERNAME = "your-email@example.com"  # Replace with your email
+    MAIL_PASSWORD = "your-email-password"    # Replace with your email password
+    MAIL_USE_TLS = True
+    MAIL_USE_SSL = False

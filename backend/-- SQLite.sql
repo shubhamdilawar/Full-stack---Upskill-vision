@@ -1,10 +1,8 @@
--- SQLite
-CREATE TABLE IF NOT EXISTS user (
+CREATE TABLE users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    first_name TEXT NOT NULL,
-    last_name TEXT NOT NULL,
+    name TEXT NOT NULL,
     email TEXT UNIQUE NOT NULL,
     password TEXT NOT NULL,
-    role TEXT NOT NULL,
-    otp TEXT
+    role TEXT NOT NULL,  -- 'admin', 'hr', 'instructor'
+    is_verified BOOLEAN DEFAULT 0  -- 0 for not verified, 1 for verified
 );

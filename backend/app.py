@@ -1,175 +1,78 @@
-from flask import Flask, request, jsonify
-from flask_sqlalchemy import SQLAlchemy
+import os
+from flask import Flask, jsonify, request, session, abort
 from flask_cors import CORS
-from flask_mail import Mail, Message
-import random
-import jwt
-import datetime
-from functools import wraps
-from werkzeug.security import generate_password_hash, check_password_hash
+from database import db, migrate
+from flask_mail import Mail
+from dotenv import load_dotenv
+from models.user import User
+from models.course import Course
 
-# Initialize the Flask app
-app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'  # SQLite database
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.secret_key = 'your_secret_key'  # Secret key for JWT
+load_dotenv()
 
-# Flask-Mail configuration
-app.config['MAIL_SERVER'] = 'smtp.gmail.com'
-app.config['MAIL_PORT'] = 587
-app.config['MAIL_USE_TLS'] = True
-app.config['MAIL_USERNAME'] = 'your_gmail_address@gmail.com'  # Replace with your Gmail address
-app.config['MAIL_PASSWORD'] = 'your_app_password'  # Replace with your Gmail App Password
-app.config['MAIL_DEFAULT_SENDER'] = 'your_gmail_address@gmail.com'
-app.config['MAIL_DEBUG'] = True
+mail = Mail()
 
+def create_app():
+    app = Flask(__name__)
 
-db = SQLAlchemy(app)
-CORS(app)
-mail = Mail(app)  # Initialize Flask-Mail
+    # Configuration
+    app.config['MAIL_SERVER'] = os.environ.get('MAIL_SERVER', 'smtp.gmail.com')
+    app.config['MAIL_PORT'] = int(os.environ.get('MAIL_PORT', 587))
+    app.config['MAIL_USE_TLS'] = os.environ.get('MAIL_USE_TLS', 'true').lower() == 'true'
+    app.config['MAIL_USE_SSL'] = os.environ.get('MAIL_USE_SSL', 'false').lower() == 'true'
+    app.config['MAIL_USERNAME'] = os.environ.get('MAIL_USERNAME')
+    app.config['MAIL_PASSWORD'] = os.environ.get('MAIL_PASSWORD')
+    app.config['MAIL_DEFAULT_SENDER'] = os.environ.get('MAIL_DEFAULT_SENDER')
 
-# User model for database
-class User(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    first_name = db.Column(db.String(50), nullable=False)
-    last_name = db.Column(db.String(50), nullable=False)
-    email = db.Column(db.String(100), unique=True, nullable=False)
-    password = db.Column(db.String(100), nullable=False)  # Hashed password
-    role = db.Column(db.String(20), nullable=False)
-    otp = db.Column(db.String(6), nullable=True)  # For OTP verification
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('SQLALCHEMY_DATABASE_URI', 'sqlite:///app.db')
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-# Create database tables
-with app.app_context():
-    db.create_all()
+    app.secret_key = os.environ.get("FLASK_SECRET_KEY")
+    if not app.secret_key:
+        raise ValueError("No FLASK_SECRET_KEY set for Flask application")
 
-# Middleware for verifying JWT token
-def token_required(f):
-    @wraps(f)
-    def decorated(*args, **kwargs):
-        token = request.headers.get("Authorization")
-        if not token:
-            return jsonify({"message": "Token is missing!"}), 401
-        try:
-            decoded_token = jwt.decode(token, app.secret_key, algorithms=["HS256"])
-        except jwt.ExpiredSignatureError:
-            return jsonify({"message": "Token has expired!"}), 401
-        except jwt.InvalidTokenError:
-            return jsonify({"message": "Invalid token!"}), 401
-        return f(decoded_token, *args, **kwargs)
-    return decorated
+    # Initialize extensions
+    db.init_app(app)
+    migrate.init_app(app, db)
+    mail.init_app(app)
+    CORS(app)
 
-# Route for root path
-@app.route('/')
-def home():
-    return "Welcome to Upskill Vision!"
+    # Import blueprints within the app context
+    from routes.auth_routes import auth_routes
+    from routes.admin_routes import admin_routes
+    from routes.course_routes import course_routes
+    from main_routes import main_bp
 
-# POST route for SignUp (user registration)
-@app.route('/auth/signup', methods=['POST'])
-def signup():
-    data = request.get_json()
+    # Register blueprints
+    app.register_blueprint(auth_routes, url_prefix='/auth')
+    app.register_blueprint(admin_routes, url_prefix='/admin')
+    app.register_blueprint(course_routes, url_prefix='/courses')
+    app.register_blueprint(main_bp)
 
-    if User.query.filter_by(email=data['email']).first():
-        return jsonify({"message": "Email already registered"}), 400
+    # New route to get the current user
+    @app.route('/auth/current_user', methods=['GET'])
+    def get_current_user():
+        user_id = session.get('user_id')
+        if not user_id:
+            return jsonify({'message': 'Not logged in'}), 401
 
-    hashed_password = generate_password_hash(data['password'], method='sha256')  # Hash password
-    new_user = User(
-        first_name=data['firstName'],
-        last_name=data['lastName'],
-        email=data['email'],
-        password=hashed_password,
-        role=data['role']
-    )
-    db.session.add(new_user)
-    db.session.commit()
+        user = User.query.get(user_id)
+        if not user:
+            return jsonify({'message': 'User not found'}), 404
 
-    return jsonify({"message": "User registered successfully!"}), 201
+        return jsonify({
+            'id': user.id,
+            'first_name': user.first_name,
+            'last_name': user.last_name,
+            'email': user.email,
+            'role': user.role,
+            'status': user.status
+        })
 
-# POST route for Login (user authentication)
-@app.route('/auth/login', methods=['POST'])
-def login():
-    data = request.get_json()
+    with app.app_context():
+        db.create_all()
 
-    user = User.query.filter_by(email=data['email']).first()
-    if not user or not check_password_hash(user.password, data['password']):
-        return jsonify({"message": "Invalid credentials"}), 401
+    return app
 
-    if user.role != data['role']:
-        return jsonify({"message": "Incorrect role selected"}), 403
-
-    token = jwt.encode(
-        {
-            "email": user.email,
-            "role": user.role,
-            "exp": datetime.datetime.utcnow() + datetime.timedelta(hours=1)
-        },
-        app.secret_key,
-        algorithm="HS256"
-    )
-
-    return jsonify({"message": "Login successful", "token": token, "role": user.role}), 200
-
-# POST route for Forgot Password
-@app.route('/auth/forgot-password', methods=['POST'])
-def forgot_password():
-    data = request.get_json()
-    user = User.query.filter_by(email=data['email']).first()
-
-    if not user:
-        return jsonify({"message": "Email not registered"}), 404
-
-    otp = str(random.randint(100000, 999999))
-    user.otp = otp
-    db.session.commit()
-
-    try:
-        msg = Message(
-            'Your OTP for Password Reset',
-            recipients=[user.email]
-        )
-        msg.body = f"Hello {user.first_name},\n\nYour OTP for password reset is: {otp}.\n\nIf you did not request this, please ignore this email."
-        mail.send(msg)
-        print(f"OTP sent to {user.email}: {otp}")
-    except Exception as e:
-        print(f"Failed to send email: {e}")
-        return jsonify({"message": "Failed to send OTP email. Please try again later."}), 500
-
-    return jsonify({"message": "OTP sent to your email"}), 200
-
-# POST route for OTP Verification
-@app.route('/auth/verify-otp', methods=['POST'])
-def verify_otp():
-    data = request.get_json()
-    user = User.query.filter_by(email=data['email']).first()
-
-    if not user or user.otp != data['otp']:
-        return jsonify({"message": "Invalid OTP"}), 400
-
-    return jsonify({"message": "OTP verified"}), 200
-
-# POST route for Reset Password
-@app.route('/auth/reset-password', methods=['POST'])
-def reset_password():
-    data = request.get_json()
-    user = User.query.filter_by(email=data['email']).first()
-
-    if not user:
-        return jsonify({"message": "Email not found"}), 404
-
-    hashed_new_password = generate_password_hash(data['newPassword'], method='sha256')
-    user.password = hashed_new_password
-    user.otp = None
-    db.session.commit()
-
-    return jsonify({"message": "Password reset successfully!"}), 200
-
-# Example of a protected route
-@app.route('/admin', methods=['GET'])
-@token_required
-def admin_dashboard(decoded_token):
-    if decoded_token["role"] != "HR Admin":
-        return jsonify({"message": "Access denied!"}), 403
-    return jsonify({"message": "Welcome to the HR Admin Dashboard!"})
-
-# Run the Flask application
-if __name__ == '__main__':
+if __name__ == "__main__":
+    app = create_app()
     app.run(debug=True)

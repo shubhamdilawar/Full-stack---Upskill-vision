@@ -1,0 +1,84 @@
+.create-course-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #f5f5f5;
+  padding: 2rem;
+}
+
+.create-course-form {
+  background-color: white;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  width: 500px;
+  text-align: center;
+}
+
+.create-course-form h2 {
+  color: #0288d1;
+  margin-bottom: 1rem;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+input[type="text"],
+input[type="email"],
+textarea,
+select {
+  width: calc(100% - 22px); /* Adjusted width for consistent padding */
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 1rem;
+  box-sizing: border-box; /* Include padding and border in element's total width */
+}
+
+  select {
+     /* Ensure consistent appearance of select dropdown */
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+      background-image: url('data:image/svg+xml;utf8,<svg fill="%23ccc" xmlns="http://www.w3.org/2000/svg" width="20" height="20"><path d="M7.5 10l5 5 5-5z"/></svg>');
+      background-repeat: no-repeat;
+      background-position: right 10px center;
+      background-color: #fff; /* White background */
+  }
+
+textarea {
+  min-height: 120px;
+}
+
+.submit-btn {
+  padding: 10px 20px;
+  background-color: #0288d1;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-top: 15px;
+}
+
+.submit-btn:hover {
+  background-color: #0277bd;
+}
+
+.success-message {
+  color: green;
+  margin-bottom: 10px;
+}
+
+.error-message {
+  color: red;
+  margin-bottom: 10px;
+}

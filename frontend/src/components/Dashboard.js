@@ -1,37 +1,109 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import "../styles/Dashboard.css"; // Optional: Add styles for the dashboard
+import "../styles/Dashboard.css";
+import axios from 'axios';
+import BannerImage from '../assets/banner.png';
 
 const Dashboard = () => {
-  const navigate = useNavigate();
+    const [userRole, setUserRole] = useState(null);
+    const [courses, setCourses] = useState([]);
+    const navigate = useNavigate();
 
-  // Handle logout (clears user data and redirects to login page)
-  const handleLogout = () => {
-    localStorage.removeItem("token"); // Remove token if JWT is implemented
-    navigate("/"); // Redirect to the login page
-  };
+    useEffect(() => {
+        const fetchUserData = async () => {
+            const token = localStorage.getItem('token');
+            if (token) {
+                try {
+                    const response = await axios.get("http://127.0.0.1:5000/auth/current_user", {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+                    if (response.status === 200) {
+                        setUserRole(response.data.role);
+                    } else {
+                        console.error("Failed to fetch user data:", response);
+                    }
+                } catch (error) {
+                    console.error("Error fetching user data:", error);
+                }
+            }
+        };
+         const fetchCourses = async () => {
+            const token = localStorage.getItem('token');
+            if (token) {
+                try {
+                    const response = await axios.get("http://127.0.0.1:5000/courses/courses", {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+                     if (response.status === 200) {
+                        setCourses(response.data.courses);
+                     } else {
+                        console.error("Failed to fetch courses:", response);
+                    }
+                } catch (error) {
+                    console.error("Error fetching courses:", error);
+                }
+            }
+         };
+        fetchUserData();
+        fetchCourses();
+    }, []);
 
-  return (
-    <div className="dashboard-container">
-      <h1>Welcome to the Dashboard</h1>
-      <p>Here’s where you can access your app features and data.</p>
+    const handleLogout = () => {
+        localStorage.removeItem("token");
+        localStorage.removeItem("role");
+        navigate("/");
+    };
 
-      {/* Sample navigation options */}
-      <div className="dashboard-actions">
-        <button onClick={() => alert("Feature 1 Coming Soon!")}>
-          Feature 1
-        </button>
-        <button onClick={() => alert("Feature 2 Coming Soon!")}>
-          Feature 2
-        </button>
-      </div>
+    return (
+        <div className="dashboard-container">
+            <div className="header">
+                <h1 style={{ display: 'flex', alignItems: 'center' }}>
+                    Upskill Vision
+                    {userRole && (
+                        <span className="dashboard-tag">
+                            {userRole} Dashboard
+                        </span>
+                    )}
+                </h1>
+                <div className="user-info">
+                    <span>Welcome, Participant</span> {/* Changed Welcome message */}
+                    <button onClick={handleLogout} className="logout-btn">
+                        Logout
+                    </button>
+                </div>
+            </div>
 
-      {/* Logout button */}
-      <button onClick={handleLogout} className="logout-btn">
-        Logout
-      </button>
-    </div>
-  );
+            {/* Added Banner Image */}
+             <div className="banner">
+                <img src={BannerImage} alt="Banner" />
+            </div>
+
+            <div className="content">
+                <input type="text" placeholder="Search..." className="search-bar" />
+
+                <div>
+                <h3>Available Courses</h3>
+                <ul className="course-list">
+                    {courses.map(course => (
+                        <li key={course.id} className="course-item">
+                            <h4>{course.course_title}</h4>
+                            <p>Instructor: {course.instructor_name}</p>
+                            <p>{course.description}</p>
+                            <p>Start Date: {course.start_date}</p>
+                             <p>End Date: {course.end_date}</p>
+                        </li>
+                    ))}
+                </ul>
+                </div>
+
+                <div>
+                    <h3>Announcements</h3>
+                    <p>No new announcements.</p>
+                </div>
+            </div>
+            <p className="inspirational-quote">"The best way to predict the future is to create it." — Peter Drucker</p>
+        </div>
+    );
 };
 
 export default Dashboard;

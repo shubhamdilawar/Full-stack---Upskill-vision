@@ -2,16 +2,31 @@ import React, { useState, useEffect } from 'react';
 import '../styles/Dashboard.css';
 import axios from 'axios';
 import { useNavigate } from "react-router-dom";
-import BannerImage from '../assets/banner.png'; // Assuming you have a banner image
+import BannerImage from '../assets/banner.png';
 
 const HRAdminDashboard = () => {
      const [users, setUsers] = useState([]);
     const navigate = useNavigate();
     const [userRole, setUserRole] = useState(null);
+    const channel = new BroadcastChannel('auth');
 
-     useEffect(() => {
+    useEffect(() => {
+        const handleStorageChange = (event) => {
+                if (event.key === 'loginEvent' && event.newValue === 'loggedIn') {
+                    const token = localStorage.getItem('token');
+                  if (token) {
+                         localStorage.removeItem("token");
+                         localStorage.removeItem("role");
+                            localStorage.removeItem("user_id");
+                         navigate("/");
+                    }
+                }
+         };
+           window.addEventListener('storage', handleStorageChange);
+
+
         const fetchUserData = async () => {
-             const token = localStorage.getItem('token');
+            const token = localStorage.getItem('token');
             if (token) {
                 try {
                     const response = await axios.get("http://127.0.0.1:5000/auth/current_user", {
@@ -42,7 +57,19 @@ const HRAdminDashboard = () => {
         };
           fetchUserData();
         fetchUsers();
-    }, []);
+          channel.onmessage = (event) => {
+            if (event.data === 'logout') {
+                localStorage.removeItem("token");
+                localStorage.removeItem("role");
+                  localStorage.removeItem("user_id");
+                navigate("/");
+            }
+        };
+         return () => {
+            window.removeEventListener('storage', handleStorageChange);
+            channel.close();
+        };
+    }, [navigate, channel]);
   const handleApprove = async (userId) => {
         const token = localStorage.getItem('token');
          try {
@@ -81,6 +108,9 @@ const HRAdminDashboard = () => {
        const handleLogout = () => {
         localStorage.removeItem("token");
         localStorage.removeItem("role");
+          localStorage.removeItem("user_id");
+        localStorage.removeItem("loginEvent");
+        channel.postMessage('logout');
         navigate("/");
     };
     return (
@@ -88,13 +118,12 @@ const HRAdminDashboard = () => {
              <div className="header">
                  <h1 style={{ display: 'flex', alignItems: 'center' }}>
                       Upskill Vision
-                      <span className="dashboard-tag">HR Admin Dashboard</span>
                       {userRole && (
                            <span className="dashboard-tag">{userRole === "HR Admin" ? "HR Admin Dashboard" : "Manager Dashboard"}</span>
                        )}
                 </h1>
                   <div className="user-info">
-                     <span>Welcome, HR Admin{userRole}</span>
+                     <span>Welcome, {userRole}</span>
                       <button onClick={handleLogout} className="logout-btn">
                         Logout
                      </button>

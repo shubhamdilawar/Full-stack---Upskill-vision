@@ -8,8 +8,22 @@ const Dashboard = () => {
     const [userRole, setUserRole] = useState(null);
     const [courses, setCourses] = useState([]);
     const navigate = useNavigate();
+        const channel = new BroadcastChannel('auth');
+
 
     useEffect(() => {
+          const handleStorageChange = (event) => {
+                if (event.key === 'loginEvent' && event.newValue === 'loggedIn') {
+                    const token = localStorage.getItem('token');
+                  if (token) {
+                         localStorage.removeItem("token");
+                         localStorage.removeItem("role");
+                        localStorage.removeItem("user_id");
+                         navigate("/");
+                    }
+                }
+         };
+        window.addEventListener('storage', handleStorageChange);
         const fetchUserData = async () => {
             const token = localStorage.getItem('token');
             if (token) {
@@ -46,11 +60,27 @@ const Dashboard = () => {
          };
         fetchUserData();
         fetchCourses();
-    }, []);
+        channel.onmessage = (event) => {
+            if (event.data === 'logout') {
+                localStorage.removeItem("token");
+                  localStorage.removeItem("role");
+                    localStorage.removeItem("user_id");
+                navigate("/");
+            }
+         };
+
+          return () => {
+            window.removeEventListener('storage', handleStorageChange);
+              channel.close();
+        };
+    }, [navigate,channel]);
 
     const handleLogout = () => {
         localStorage.removeItem("token");
         localStorage.removeItem("role");
+         localStorage.removeItem("user_id");
+        localStorage.removeItem("loginEvent");
+        channel.postMessage('logout');
         navigate("/");
     };
 
@@ -66,7 +96,7 @@ const Dashboard = () => {
                     )}
                 </h1>
                 <div className="user-info">
-                    <span>Welcome, Participant</span> {/* Changed Welcome message */}
+                    <span>Welcome, Participant</span>
                     <button onClick={handleLogout} className="logout-btn">
                         Logout
                     </button>

@@ -23,27 +23,34 @@ def token_required(f):
         try:
             data = jwt.decode(token, current_app.config['SECRET_KEY'], algorithms=["HS256"])
             user_id = data.get('user_id')
-            user_role = data.get('role') # Get role from token
+            user_role = data.get('role')
+            session_token = data.get('session_token')
 
             if not user_id:
                 return jsonify({'message': 'Invalid token format, no user id!'}), 401
-
-            if not user_role: # check if role is present
+            if not user_role:
                  return jsonify({'message': 'Invalid token format, no role!'}), 401
+            if not session_token:
+                return jsonify({'message': 'Invalid token format, no session token!'}), 401
+
 
             current_user = User.query.filter_by(id=user_id).first()
             if not current_user:
                  return jsonify({'message': 'User not found!'}), 401
 
-            if current_user.role != user_role: # Compare role from token with role from user object
+            if current_user.auth_session_token != session_token:
+                return jsonify({'message': 'Invalid or expired session'}), 401
+            if current_user.role != user_role:
                 print(f"Token role {user_role} does not match user's role {current_user.role}")
                 return jsonify({'message': 'Unauthorized to create courses'}), 403
 
-            if current_user.role not in ['HR Admin', 'Instructor', 'Manager']:
-                print(f"User with id {current_user.id} and role {current_user.role} is unauthorized") # Log the role
-                return jsonify({'message': 'Unauthorized to create courses'}), 403
+            if request.endpoint == 'course.get_courses':
+               session['role'] = current_user.role
+            elif current_user.role not in ['HR Admin', 'Instructor', 'Manager']:
+                 print(f"User with id {current_user.id} and role {current_user.role} is unauthorized")
+                 return jsonify({'message': 'Unauthorized to create courses'}), 403
 
-            session['role'] = current_user.role # Set session variable
+            session['role'] = current_user.role
             print(f"User authorized successfully with role: {current_user.role}")
             return f(current_user, *args, **kwargs)
         except jwt.ExpiredSignatureError:
@@ -53,8 +60,8 @@ def token_required(f):
             print("Token is Invalid")
             return jsonify({'message': 'Invalid token'}), 401
         except Exception as e:
-             print(f"Token verification error: {e}")
-             return jsonify({'message': 'Token is invalid or an error occurred!'}), 401
+            print(f"Token verification error: {e}")
+            return jsonify({'message': 'Token is invalid or an error occurred!'}), 401
     return decorated
 
 @course_routes.route('/create_course', methods=['POST'])

@@ -7,8 +7,21 @@ import BannerImage from '../assets/banner.png';
 const InstructorDashboard = () => {
     const navigate = useNavigate();
     const [courses, setCourses] = useState([]);
+     const channel = new BroadcastChannel('auth');
 
     useEffect(() => {
+         const handleStorageChange = (event) => {
+            if (event.key === 'loginEvent' && event.newValue === 'loggedIn') {
+                 const token = localStorage.getItem('token');
+              if (token) {
+                     localStorage.removeItem("token");
+                     localStorage.removeItem("role");
+                    localStorage.removeItem("user_id");
+                     navigate("/");
+                }
+            }
+         };
+         window.addEventListener('storage', handleStorageChange);
         const fetchCourses = async () => {
             const token = localStorage.getItem('token');
             if (token) {
@@ -27,10 +40,25 @@ const InstructorDashboard = () => {
             }
          };
         fetchCourses();
-    }, []);
+        channel.onmessage = (event) => {
+            if (event.data === 'logout') {
+                  localStorage.removeItem("token");
+                   localStorage.removeItem("role");
+                    localStorage.removeItem("user_id");
+                navigate("/");
+            }
+        };
+         return () => {
+            window.removeEventListener('storage', handleStorageChange);
+              channel.close();
+       };
+    }, [navigate, channel]);
     const handleLogout = () => {
-        localStorage.removeItem("token");
+         localStorage.removeItem("token");
         localStorage.removeItem("role");
+         localStorage.removeItem("user_id");
+         localStorage.removeItem("loginEvent");
+          channel.postMessage('logout');
         navigate("/");
     };
      const handleRemoveCourse = async (courseId) => {
@@ -63,7 +91,7 @@ const InstructorDashboard = () => {
                     </button>
                 </div>
             </div>
-            <div className="banner">
+           <div className="banner">
                 <img src={BannerImage} alt="Banner" />
             </div>
 
@@ -89,7 +117,7 @@ const InstructorDashboard = () => {
                     </ul>
                 </div>
             </div>
-               <p className="inspirational-quote">"The best way to predict the future is to create it." — Peter Drucker</p>
+            <p className="inspirational-quote">"The best way to predict the future is to create it." — Peter Drucker</p>
         </div>
     );
 };

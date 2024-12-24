@@ -7,11 +7,47 @@ import validators
 import jwt
 from datetime import datetime, timedelta
 import threading
+import re
+import uuid
+from functools import wraps
+from flask_login import LoginManager, login_user, UserMixin, current_user, logout_user
 
 auth_routes = Blueprint('auth', __name__)
 
+login_manager = LoginManager() # Initialize LoginManager
+login_manager.id_attribute = 'get_auth_session_token' # Set the id attribute
+
+
 # Lock for synchronizing database operations to prevent SQLITE concurrency errors
 db_lock = threading.Lock()
+
+def is_strong_password(password):
+    # Define criteria for a strong password
+     if len(password) < 8:
+        return False
+     if not re.search("[a-z]", password):
+        return False
+     if not re.search("[A-Z]", password):
+        return False
+     if not re.search("[0-9]", password):
+        return False
+     if not re.search("[!@#$%^&*(),.?\":{}|<>]", password):
+        return False
+     return True
+
+def set_user_auth_session_token(user, auth_session_token):
+    user.auth_session_token = auth_session_token
+    db.session.commit()
+
+def login_user_with_secret_session(user, remember=False, force=False):
+     auth_session_token = random.getrandbits(128)
+     auth_session_token = '%032x' % auth_session_token
+    # store `auth_session_token` in user table
+     set_user_auth_session_token(user, auth_session_token)
+     login_user(user, remember=remember, force=force)
+     return  auth_session_token
+
+
 
 @auth_routes.route("/signup", methods=["POST"])
 def signup():
@@ -30,12 +66,13 @@ def signup():
 
     existing_user = User.query.filter_by(email=email).first()
     if existing_user:
-        print(f"Signup failed: Email already exists {email}")
         return jsonify({"message": "Email already exists"}), 400
 
     if not validators.email(email):
-        print(f"Signup failed: Invalid email format {email}")
         return jsonify({"message": "Invalid email format"}), 400
+
+    if not is_strong_password(password):
+        return jsonify({"message": "Password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one digit, and one special character"}), 400
 
     # Set status to pending for HR Admin, Manager, and HR, otherwise approved
     status = "pending" if role in ["Manager", "HR", "HR Admin"] else "approved"
@@ -53,7 +90,6 @@ def signup():
         with db_lock:
             db.session.add(new_user)
             db.session.commit()
-        print(f"Signup Successful: User created with email {email} and role {role}")
         return jsonify({"message": "User created successfully!"}), 201
     except Exception as e:
         db.session.rollback()
@@ -76,15 +112,20 @@ def login():
         print(f"User found in DB: Email={user.email}, Role={user.role}, Status={user.status}, Password={user.password}")
         if user.password == password and user.role == role:
             db.session.refresh(user)
+             # Generate a new session token
+            auth_session_token = login_user_with_secret_session(user) # Using custom function to generate session token
             token = jwt.encode({
                 'user_id': user.id,
                 'exp': datetime.utcnow() + timedelta(hours=24),
-                'role': user.role
+                'role': user.role,
+                'session_token': auth_session_token
             }, current_app.config['SECRET_KEY'], algorithm='HS256')
+
 
             session['user_id'] = user.id
             session['role'] = user.role
             session.modified = True
+            session['session_token'] = auth_session_token
 
             if user.role in ["Manager", "HR", "HR Admin"] and user.status == "pending":
                 return jsonify({"message": "Admin approval required"}), 403
@@ -93,8 +134,10 @@ def login():
             else:
                 return jsonify({"message": "Admin approval required"}), 403
         else:
+            print("Invalid Credentials")
             return jsonify({"message": "Invalid credentials"}), 401
     else:
+        print("User not found")
         return jsonify({"message": "Invalid credentials"}), 401
 
 
@@ -149,6 +192,8 @@ def reset_password():
     user = User.query.filter_by(email=email).first()
 
     if user:
+        if not is_strong_password(new_password):
+            return jsonify({"message": "Password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one digit, and one special character"}), 400
         user.password = new_password
         user.otp = None
         db.session.commit()

@@ -6,10 +6,12 @@ from flask_mail import Mail
 from dotenv import load_dotenv
 from models.user import User
 from models.course import Course
+from flask_login import LoginManager
 
 load_dotenv()
 
 mail = Mail()
+login_manager = LoginManager() # Initialize LoginManager
 
 def create_app():
     app = Flask(__name__)
@@ -34,6 +36,7 @@ def create_app():
     db.init_app(app)
     migrate.init_app(app, db)
     mail.init_app(app)
+    login_manager.init_app(app) # Initialize LoginManager with app
     CORS(app)
 
     # Import blueprints within the app context

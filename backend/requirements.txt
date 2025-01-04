@@ -1,13 +1,7 @@
-Flask==2.3.3
-Werkzeug>=2.3.7
-flask_sqlalchemy
-flask_migrate
-
-SQLAlchemy==2.0.20
-
-bcrypt==4.0.1
-Flask-Mail==0.9.1
-
-
-# any other dependencies you have
+flask==2.3.3
+flask-cors==5.0.0
+pymongo[srv]==4.10.1
+python-dotenv==1.0.1
+dnspython==2.7.0
+PyJWT==2.8.0
 

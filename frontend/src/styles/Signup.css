@@ -1,0 +1,80 @@
+.signup-container {
+    display: flex;
+    height: 100vh;
+  }
+  
+  .left-section {
+    flex: 1;
+    background-color: #e0f7fa;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .left-section h1 {
+    font-size: 2rem;
+    color: white;
+  }
+  
+  .right-section {
+    flex: 1;
+    padding: 2rem;
+  }
+  
+  .name-fields {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .name-fields input {
+    width: 48%;
+  }
+  
+  input {
+    width: 100%;
+    margin-bottom: 1rem;
+    padding: 0.8rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .signup-btn, .google-btn {
+    width: 100%;
+    padding: 0.8rem;
+    background-color: #80deea;
+    border: none;
+    color: white;
+    font-weight: bold;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .link {
+    color: #0288d1;
+    cursor: pointer;
+  }
+  
+  .google-login {
+    display: flex;
+    align-items: center;
+    margin: 1rem 0;
+  }
+  
+  .google-login hr {
+    flex: 1;
+    border: none;
+    height: 1px;
+    background: #ccc;
+  }
+  
+  .google-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .google-btn img {
+    width: 20px;
+    margin-right: 10px;
+  }
+  

@@ -1,0 +1,146 @@
+.audit-trail-container {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.audit-trail-banner {
+    background: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.audit-trail-banner h2 {
+    color: #1976d2;
+    margin-bottom: 0.5rem;
+}
+
+.audit-filters {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+}
+
+.audit-filters select,
+.audit-filters input {
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    min-width: 150px;
+}
+
+.audit-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 2rem;
+}
+
+.audit-table th,
+.audit-table td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.audit-table th {
+    background: #f5f5f5;
+    font-weight: 600;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    align-items: center;
+}
+
+.pagination button {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 4px;
+    background: #1976d2;
+    color: white;
+    cursor: pointer;
+}
+
+.pagination button:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+}
+
+.no-records {
+    text-align: center;
+    padding: 2rem;
+    color: #666;
+    font-style: italic;
+}
+
+.audit-table td {
+    max-width: 300px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.audit-table td:nth-child(2) {
+    font-weight: 500;
+    color: #1976d2;
+}
+
+.action-type {
+    font-weight: 500;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    text-align: center;
+}
+
+.action-type.course_created {
+    background-color: #e3f2fd;
+    color: #1976d2;
+}
+
+.action-type.course_updated {
+    background-color: #fff3e0;
+    color: #f57c00;
+}
+
+.action-type.course_deleted {
+    background-color: #ffebee;
+    color: #d32f2f;
+}
+
+.action-type.user_approved {
+    background-color: #e8f5e9;
+    color: #388e3c;
+}
+
+.action-type.user_removed {
+    background-color: #fce4ec;
+    color: #c2185b;
+}
+
+.action-type.status_changed {
+    background-color: #f3e5f5;
+    color: #7b1fa2;
+}
+
+.audit-filters select {
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-right: 1rem;
+    min-width: 150px;
+    background-color: white;
+}
+
+.audit-table td {
+    padding: 1rem;
+    vertical-align: middle;
+}
+
+.audit-table tr:hover {
+    background-color: #f5f5f5;
+} 

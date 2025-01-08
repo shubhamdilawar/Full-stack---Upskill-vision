@@ -320,6 +320,13 @@ def get_users(current_user):
 @token_required
 def update_user_status(current_user, user_id):
     try:
+        # Check if trying to modify self
+        if current_user['user_id'] == user_id:
+            return jsonify({
+                'error': 'Unauthorized',
+                'message': 'Cannot modify own account status'
+            }), 403
+
         if current_user.get('role') != 'HR Admin':
             return jsonify({'error': 'Unauthorized access'}), 403
 
@@ -372,3 +379,68 @@ def reset_password(current_user):
     except Exception as e:
         print(f"Error resetting password: {str(e)}")
         return jsonify({'error': 'Failed to reset password'}), 500
+
+@auth.route('/remove-user/<user_id>', methods=['DELETE'])
+@token_required
+def remove_user(current_user, user_id):
+    try:
+        # Check if user has admin privileges
+        if current_user.get('role') != 'HR Admin':
+            return jsonify({'error': 'Unauthorized access'}), 403
+
+        # Check if user exists
+        user = users_collection.find_one({'_id': ObjectId(user_id)})
+        if not user:
+            return jsonify({'error': 'User not found'}), 404
+
+        # Don't allow admin to delete themselves
+        if str(user['_id']) == current_user['user_id']:
+            return jsonify({'error': 'Cannot delete your own account'}), 400
+
+        # Delete the user
+        result = users_collection.delete_one({'_id': ObjectId(user_id)})
+        
+        if result.deleted_count > 0:
+            return jsonify({'message': 'User successfully removed'}), 200
+        
+        return jsonify({'error': 'Failed to remove user'}), 400
+
+    except Exception as e:
+        print(f"Error removing user: {str(e)}")
+        return jsonify({'error': 'Failed to remove user'}), 500
+
+@auth.route('/instructors', methods=['GET'])
+@token_required
+def get_instructors(current_user):
+    try:
+        # Check if user has appropriate role
+        if current_user.get('role') not in ['HR Admin', 'Manager']:
+            return jsonify({'error': 'Unauthorized access'}), 403
+
+        # Find all instructors with status 'approved'
+        instructors = list(users_collection.find({
+            'role': 'Instructor',
+            'status': 'approved'
+        }, {
+            'password': 0  # Exclude password field
+        }))
+
+        # Format instructors for response
+        formatted_instructors = [{
+            'id': str(instructor['_id']),
+            'first_name': instructor.get('first_name', ''),
+            'last_name': instructor.get('last_name', ''),
+            'email': instructor.get('email', ''),
+            'status': instructor.get('status', ''),
+            'created_at': instructor.get('created_at', '').isoformat() if instructor.get('created_at') else None,
+            'last_login': instructor.get('last_login', '').isoformat() if instructor.get('last_login') else None
+        } for instructor in instructors]
+
+        return jsonify({
+            'instructors': formatted_instructors,
+            'count': len(formatted_instructors)
+        }), 200
+
+    except Exception as e:
+        print(f"Error fetching instructors: {str(e)}")
+        return jsonify({'error': 'Failed to fetch instructors'}), 500

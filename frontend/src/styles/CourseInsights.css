@@ -1,0 +1,121 @@
+.course-insights {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.course-header {
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.course-header h2 {
+    color: #1976d2;
+    margin-bottom: 0.5rem;
+}
+
+.instructor-info {
+    color: #666;
+}
+
+.insights-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+.overview-section,
+.progress-section,
+.quiz-performance {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.overview-details p {
+    margin: 0.5rem 0;
+    color: #666;
+}
+
+.chart-container {
+    position: relative;
+    height: 200px;
+    margin: 1rem 0;
+}
+
+.progress-label {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #1976d2;
+}
+
+.modules-section {
+    grid-column: 1 / -1;
+}
+
+.module-item {
+    background: white;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    border: 1px solid #e0e0e0;
+}
+
+.module-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.status {
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.875rem;
+}
+
+.status.not-started {
+    background: #f5f5f5;
+    color: #666;
+}
+
+.status.in-progress {
+    background: #e3f2fd;
+    color: #1976d2;
+}
+
+.status.completed {
+    background: #e8f5e9;
+    color: #2e7d32;
+}
+
+.quiz-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 0.5rem;
+    padding-top: 0.5rem;
+    border-top: 1px solid #e0e0e0;
+}
+
+.quiz-status {
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.875rem;
+}
+
+.quiz-status.passed {
+    background: #e8f5e9;
+    color: #2e7d32;
+}
+
+.quiz-status.failed {
+    background: #ffebee;
+    color: #c62828;
+} 

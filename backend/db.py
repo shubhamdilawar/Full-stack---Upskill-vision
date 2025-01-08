@@ -1,5 +1,6 @@
 from pymongo import MongoClient
 import sys
+from bson import ObjectId
 
 def get_db_connection():
     try:
@@ -30,6 +31,10 @@ try:
     quizzes_collection.create_index([("course_id", 1)])
     submissions_collection.create_index([("assignment_id", 1), ("student_id", 1)])
     audit_log_collection.create_index([("course_id", 1), ("timestamp", -1)])
+    
+    # Create indexes if needed
+    modules_collection.create_index([('course_id', 1)])
+    modules_collection.create_index([('instructor_id', 1)])
     
     print("Database and collections are ready!")
 except Exception as e:

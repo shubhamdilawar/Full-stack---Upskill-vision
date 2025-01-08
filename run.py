@@ -6,7 +6,7 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 # Add the current directory to Python path
 sys.path.append(current_dir)
 
-from backend.app import app
+from backend.app
 
 if __name__ == '__main__':
     print("Starting Flask server...")

@@ -1,12 +1,11 @@
 .dashboard-container {
   display: flex;
   flex-direction: column;
-  justify-content: flex-start; /* Align to the start of the container */
-  align-items: center;
   min-height: 100vh;
   background-color: #f5f5f5;
-  padding: 2rem;
-  text-align: center;
+  padding: 0;
+  margin: 0;
+  width: 100%;
 }
 
 /* Consistent Header Styling */
@@ -14,51 +13,47 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: 1rem 2rem;
+  background-color: #ffffff;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
   width: 100%;
-  padding: 1.5rem 2rem;
-  background-color: #e0f7fa;
-  border-bottom: 1px solid #ccc;
-  margin-bottom: 1rem;
+  box-sizing: border-box;
 }
 
 .header h1 {
   margin: 0;
-  color: #0288d1;
-  font-size: 2rem;
-  font-weight: bold; /* Make the heading bold */
+  color: #333;
+  font-size: 1.8rem;
 }
 
 .user-info {
   display: flex;
   align-items: center;
+  gap: 1rem;
 }
 
 .user-info span {
-  margin-right: 10px;
-  font-weight: bold;
-  font-size: 1rem;
+  color: #666;
 }
 
 .dashboard-tag {
-  margin-left: 10px;
-  padding: 5px 10px;
-  background-color: #4CAF50;
-  color: white;
-  border-radius: 5px;
+  margin-left: 1rem;
+  padding: 0.3rem 0.8rem;
+  background-color: #e3f2fd;
+  color: #1976d2;
+  border-radius: 4px;
   font-size: 0.9rem;
-  font-weight: normal; /* Make the dashboard text not bold */
+  font-weight: normal;
 }
 
 .logout-btn {
-  margin-top: 0;
-  padding: 0.7rem 1.2rem;
+  padding: 0.5rem 1rem;
   background-color: #f44336;
   color: white;
   border: none;
-  border-radius: 5px;
-  font-size: 1rem;
+  border-radius: 4px;
   cursor: pointer;
-  transition: background-color 0.3s; /* Add a transition for smooth hover effect */
+  transition: background-color 0.3s;
 }
 
 .logout-btn:hover {
@@ -69,33 +64,38 @@
 /* Styling for the Banner */
 .banner {
   width: 100%;
-  margin-bottom: 2rem;
+  margin: 0;
+  padding: 0;
 }
 
 .banner img {
-  max-width: 100%;
+  width: 100%;
   height: auto;
-  display: block; /* Remove extra space below the image */
-  border-radius: 8px;
+  display: block;
+  object-fit: cover;
 }
 
 /* Styling for Content Area */
 .content {
-  width: 80%;
-  margin: 20px auto;
-  padding: 1.5rem; /* Add some padding to the content container */
+  flex: 1;
+  width: 100%;
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 2rem;
   background-color: #fff;
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add a subtle shadow to the content area */
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  box-sizing: border-box;
 }
 
 .search-bar {
   width: 100%;
-  padding: 10px;
+  padding: 12px;
   margin-bottom: 20px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
   font-size: 1rem;
+  box-sizing: border-box;
 }
 
 .dashboard-actions {
@@ -206,4 +206,346 @@ p {
   text-align: center;
   font-size: 0.9rem;
 
+}
+
+.dashboard-tabs {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.tab-btn {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+    background: #f5f5f5;
+    color: #333;
+    transition: all 0.3s ease;
+}
+
+.tab-btn.active {
+    background: #0288d1;
+    color: white;
+}
+
+.tab-btn:hover {
+    background: #0288d1;
+    color: white;
+}
+
+.course-tabs {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.course-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-top: 1rem;
+}
+
+.instructor-course {
+    border-left: 4px solid #0288d1;
+}
+
+.course-info {
+    margin: 1rem 0;
+}
+
+.course-info p {
+    margin: 0.5rem 0;
+}
+
+.create-course-btn {
+    background: #4caf50;
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 4px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.create-course-btn:hover {
+    background: #43a047;
+}
+
+.edit-btn {
+    background: #2196f3;
+    color: white;
+}
+
+.students-btn {
+    background: #ff9800;
+    color: white;
+}
+
+.course-actions {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.course-actions button {
+    flex: 1;
+    min-width: 120px;
+    padding: 0.5rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: opacity 0.3s ease;
+}
+
+.course-actions button:hover {
+    opacity: 0.9;
+}
+
+.no-courses-message {
+    text-align: center;
+    padding: 2rem;
+    background: #f8f9fa;
+    border-radius: 8px;
+    grid-column: 1 / -1;
+}
+
+.no-courses-message p {
+    margin: 0.5rem 0;
+    color: #666;
+}
+
+.no-courses-message p:first-child {
+    font-size: 1.1rem;
+    color: #333;
+    font-weight: 500;
+}
+
+/* Inspirational Quote */
+.inspirational-quote {
+    width: 100%;
+    text-align: center;
+    padding: 1rem;
+    margin: 0;
+    background-color: #f5f5f5;
+    color: #666;
+    font-style: italic;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .content {
+        width: 95%;
+        padding: 1rem;
+        margin: 1rem auto;
+    }
+
+    .header {
+        padding: 1rem;
+    }
+
+    .header h1 {
+        font-size: 1.5rem;
+    }
+
+    .dashboard-tag {
+        font-size: 0.8rem;
+    }
+}
+
+.users-section {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin-top: 1rem;
+}
+
+.user-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+}
+
+.user-table th,
+.user-table td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+}
+
+.user-table th {
+    background: #f8f9fa;
+    font-weight: 600;
+}
+
+.status-badge {
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.875rem;
+}
+
+.status-badge.pending {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.status-badge.approved {
+    background: #d4edda;
+    color: #155724;
+}
+
+.approve-btn {
+    background: #28a745;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-right: 0.5rem;
+}
+
+.remove-btn {
+    background: #dc3545;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.status-approved {
+    color: #28a745;
+    font-weight: 500;
+}
+
+.user-filters {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    padding: 1rem;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.search-box {
+    width: 100%;
+    position: relative;
+    margin-bottom: 0.5rem;
+}
+
+.search-input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background: #f5f5f5;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: #1976d2;
+    background: white;
+    box-shadow: 0 0 0 2px rgba(25, 118, 210, 0.1);
+}
+
+.search-input::placeholder {
+    color: #999;
+}
+
+.filter-select {
+    align-self: flex-start;
+    min-width: 200px;
+    padding: 0.75rem 1rem;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    font-size: 1rem;
+    background: #f5f5f5;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.filter-select:focus {
+    outline: none;
+    border-color: #1976d2;
+    background: white;
+    box-shadow: 0 0 0 2px rgba(25, 118, 210, 0.1);
+}
+
+/* Add animation for search results */
+.user-table tbody tr {
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Add no results message styling */
+.no-results {
+    text-align: center;
+    padding: 2rem;
+    color: #666;
+    font-style: italic;
+    background: #f8f9fa;
+    border-radius: 8px;
+    margin-top: 1rem;
+}
+
+/* Add tooltip styling */
+[title] {
+    position: relative;
+}
+
+[title]:hover::after {
+    content: attr(title);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 5px 10px;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    border-radius: 4px;
+    font-size: 12px;
+    white-space: nowrap;
+    z-index: 1000;
+}
+
+.search-icon {
+    display: none;
+}
+
+/* Add these styles for suspended users */
+.status-badge.suspended {
+    background-color: #ffebee;
+    color: #d32f2f;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-weight: 500;
+}
+
+tr.suspended-user {
+    background-color: #fff5f5 !important;
+    border-left: 3px solid #d32f2f;
+}
+
+.status-select option[value="suspended"] {
+    color: #d32f2f;
+    font-weight: 500;
 }

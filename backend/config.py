@@ -1,11 +1,9 @@
-class Config:
-    # Database Configuration
-    DATABASE_URI = "sqlite:///users.db"
+import os
+from dotenv import load_dotenv
 
-    # Email Configuration
-    MAIL_SERVER = "smtp.gmail.com"
-    MAIL_PORT = 587
-    MAIL_USERNAME = "your-email@example.com"  # Replace with your email
-    MAIL_PASSWORD = "your-email-password"    # Replace with your email password
-    MAIL_USE_TLS = True
-    MAIL_USE_SSL = False
+load_dotenv()
+
+class Config:
+    SECRET_KEY = os.getenv('JWT_SECRET_KEY', 'your-secret-key')
+    MONGODB_URI = os.getenv('MONGODB_URI', 'mongodb://localhost:27017')
+    DATABASE_NAME = os.getenv('DATABASE_NAME', 'upskill_vision')

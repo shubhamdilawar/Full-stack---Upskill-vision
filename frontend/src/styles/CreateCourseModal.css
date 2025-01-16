@@ -1,0 +1,347 @@
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: white;
+    padding: 2rem;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 600px;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: #333;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+}
+
+.form-group textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.submit-btn, .cancel-btn {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.submit-btn {
+    background: #4caf50;
+    color: white;
+}
+
+.submit-btn:disabled {
+    background: #a5d6a7;
+    cursor: not-allowed;
+}
+
+.cancel-btn {
+    background: #f5f5f5;
+    color: #333;
+}
+
+.error-message {
+    color: #f44336;
+    margin-top: 1rem;
+    font-size: 0.9rem;
+}
+
+.success-message {
+    color: #4caf50;
+    margin-top: 1rem;
+    font-size: 0.9rem;
+    text-align: center;
+    padding: 0.5rem;
+    background: #e8f5e9;
+    border-radius: 4px;
+}
+
+.react-datepicker-wrapper {
+    width: 100%;
+}
+
+.react-datepicker__input-container input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.modal-tabs {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 1rem;
+}
+
+.modal-tabs .tab-btn {
+    padding: 0.5rem 1rem;
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-weight: 500;
+    color: #666;
+    position: relative;
+}
+
+.modal-tabs .tab-btn.active {
+    color: #0288d1;
+}
+
+.modal-tabs .tab-btn.active::after {
+    content: '';
+    position: absolute;
+    bottom: -1rem;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: #0288d1;
+}
+
+.course-preview {
+    padding: 1rem;
+}
+
+.preview-content {
+    background: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 8px;
+}
+
+.preview-details {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin: 1rem 0;
+    padding: 1rem;
+    background: white;
+    border-radius: 4px;
+}
+
+.preview-section {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #eee;
+}
+
+.preview-section h5 {
+    color: #0288d1;
+    margin-bottom: 0.5rem;
+}
+
+.file-upload {
+    border: 2px dashed #ddd;
+    padding: 1rem;
+    border-radius: 4px;
+    text-align: center;
+    margin-bottom: 1rem;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.file-upload.dragging {
+    border-color: #0288d1;
+    background: rgba(2, 136, 209, 0.05);
+}
+
+.file-upload p {
+    margin: 0 0 1rem;
+    color: #666;
+}
+
+.file-upload input[type="file"] {
+    width: 100%;
+    cursor: pointer;
+    opacity: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+}
+
+.file-upload::before {
+    content: 'Choose files';
+    display: inline-block;
+    background: #0288d1;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.file-list {
+    margin-top: 1rem;
+    max-height: 200px;
+    overflow-y: auto;
+    padding-right: 0.5rem;
+}
+
+.file-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.file-list::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 3px;
+}
+
+.file-list::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 3px;
+}
+
+.file-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem;
+    background: #f5f5f5;
+    border-radius: 4px;
+    margin-bottom: 0.5rem;
+    animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.remove-file {
+    background: none;
+    border: none;
+    color: #f44336;
+    cursor: pointer;
+    font-size: 1.2rem;
+    padding: 0 0.5rem;
+    transition: transform 0.2s ease;
+}
+
+.remove-file:hover {
+    transform: scale(1.2);
+}
+
+.upload-progress {
+    margin: 1rem 0;
+    background: #f5f5f5;
+    border-radius: 4px;
+    overflow: hidden;
+    position: relative;
+    height: 20px;
+}
+
+.progress-bar {
+    height: 100%;
+    background: #4caf50;
+    transition: width 0.3s ease;
+}
+
+.upload-progress span {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #333;
+    font-size: 0.8rem;
+    z-index: 1;
+}
+
+.thumbnail-preview {
+    margin-top: 1rem;
+    max-width: 200px;
+    margin: 1rem auto;
+}
+
+.thumbnail-preview img {
+    width: 100%;
+    height: auto;
+    border-radius: 4px;
+}
+
+.course-code-field {
+    background: #f8f9fa;
+    padding: 1rem;
+    border-radius: 4px;
+    margin-bottom: 2rem;
+    border: 1px solid #e3e3e3;
+}
+
+.course-code-value {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #0288d1;
+    padding: 1rem;
+    background: #e3f2fd;
+    border-radius: 4px;
+    text-align: left;
+}
+
+.course-code-value div {
+    margin: 0.25rem 0;
+    padding: 0.5rem;
+    border-radius: 4px;
+}
+
+.course-code-value div:first-child {
+    border-bottom: 1px solid rgba(2, 136, 209, 0.2);
+    margin-bottom: 0.5rem;
+    padding-bottom: 0.75rem;
+}
+
+.duration-field {
+    background-color: #f5f5f5;
+    cursor: not-allowed;
+}
+
+.duration-field:focus {
+    outline: none;
+    border-color: #ddd;
+} 

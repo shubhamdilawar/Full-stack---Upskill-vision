@@ -1,0 +1,410 @@
+.student-details-page {
+    padding: 2rem;
+<<<<<<< HEAD
+    max-width: 1200px;
+=======
+    max-width: 1400px;
+>>>>>>> 7dd64ab7236d2d413916d3989d6ea64b0bb306a8
+    margin: 0 auto;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 2rem;
+<<<<<<< HEAD
+    gap: 1rem;
+=======
+    background: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+>>>>>>> 7dd64ab7236d2d413916d3989d6ea64b0bb306a8
+}
+
+.back-btn {
+    padding: 0.5rem 1rem;
+<<<<<<< HEAD
+    background: #f0f0f0;
+    border: none;
+=======
+    margin-right: 1.5rem;
+    border: none;
+    background: #f0f0f0;
+>>>>>>> 7dd64ab7236d2d413916d3989d6ea64b0bb306a8
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+<<<<<<< HEAD
+}
+
+.student-info {
+=======
+    transition: background 0.3s ease;
+}
+
+.back-btn:hover {
+    background: #e0e0e0;
+}
+
+.overview-section {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+.student-info {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    display: flex;
+    gap: 1.5rem;
+}
+
+.profile-image {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.info-details h2 {
+    margin-bottom: 0.5rem;
+    color: #333;
+}
+
+.info-details p {
+    color: #666;
+    margin-bottom: 0.5rem;
+}
+
+.performance-metrics {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+}
+
+.metric-card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    text-align: center;
+}
+
+.metric-card h3 {
+    color: #666;
+    margin-bottom: 1rem;
+    font-size: 1rem;
+}
+
+.progress-circle {
+    width: 120px;
+    height: 120px;
+    margin: 0 auto;
+}
+
+.progress-circle svg {
+    transform: rotate(-90deg);
+}
+
+.progress-circle text {
+    transform: rotate(90deg);
+    text-anchor: middle;
+    dominant-baseline: middle;
+    font-size: 8px;
+    fill: #333;
+    font-weight: bold;
+}
+
+.metric-value {
+    font-size: 2rem;
+    color: #007bff;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+}
+
+.metric-label {
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.completion-rate {
+    margin-top: 0.5rem;
+    color: #28a745;
+    font-size: 0.9rem;
+}
+
+.progress-chart {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin-bottom: 2rem;
+}
+
+.detailed-performance {
+>>>>>>> 7dd64ab7236d2d413916d3989d6ea64b0bb306a8
+    display: grid;
+    gap: 2rem;
+}
+
+<<<<<<< HEAD
+.basic-info {
+=======
+.assignments-section,
+.quizzes-section {
+>>>>>>> 7dd64ab7236d2d413916d3989d6ea64b0bb306a8
+    background: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+<<<<<<< HEAD
+.performance-metrics {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.metric-card {
+    background: #f8f9fa;
+    padding: 1rem;
+    border-radius: 4px;
+}
+
+.activity-timeline {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.timeline {
+    margin-top: 1rem;
+}
+
+.activity-item {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 1rem;
+    padding: 1rem;
+    border-left: 2px solid #e0e0e0;
+    margin-left: 1rem;
+}
+
+.activity-date {
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.activity-content h4 {
+    margin: 0;
+    color: #333;
+}
+
+.activity-content p {
+    margin: 0.5rem 0 0;
+    color: #666;
+}
+
+.loading, .error-message {
+    text-align: center;
+    padding: 2rem;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.error-message {
+    color: #dc3545;
+}
+
+.quiz-attempts-section {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-top: 1.5rem;
+    box-shadow: 0 2px 4px rgba(25, 118, 210, 0.1);
+}
+
+.quiz-attempts-section h3 {
+    color: #2c3e50;
+    margin-bottom: 1.5rem;
+}
+
+.quiz-attempt-item {
+    background: linear-gradient(145deg, #ffffff, #f1f8ff);
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.attempt-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.attempt-header h4 {
+    color: #1976d2;
+    margin: 0;
+}
+
+.attempt-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+.stat-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem;
+    background: rgba(25, 118, 210, 0.03);
+    border-radius: 6px;
+}
+
+.stat-label {
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.stat-value {
+    color: #2c3e50;
+    font-weight: 500;
+}
+
+.status-badge {
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.status-badge.passed {
+    background: #e8f5e9;
+    color: #4caf50;
+}
+
+.status-badge.failed {
+    background: #ffebee;
+    color: #f44336;
+}
+
+@media (max-width: 768px) {
+    .attempt-stats {
+        grid-template-columns: 1fr;
+=======
+.assignments-section h2,
+.quizzes-section h2 {
+    margin-bottom: 1.5rem;
+    color: #333;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+}
+
+th {
+    background: #f8f9fa;
+    font-weight: 500;
+    color: #666;
+}
+
+.status {
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    display: inline-block;
+}
+
+.status.submitted {
+    background: #e3f2fd;
+    color: #1976d2;
+}
+
+.status.graded {
+    background: #e8f5e9;
+    color: #2e7d32;
+}
+
+.status.pending {
+    background: #fff3e0;
+    color: #f57c00;
+}
+
+.status.late {
+    background: #ffebee;
+    color: #c62828;
+}
+
+.view-btn {
+    padding: 0.5rem 1rem;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.view-btn:hover {
+    background: #0056b3;
+}
+
+@media (max-width: 1200px) {
+    .overview-section {
+        grid-template-columns: 1fr;
+    }
+
+    .performance-metrics {
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    }
+}
+
+@media (max-width: 768px) {
+    .student-details-page {
+        padding: 1rem;
+    }
+
+    .header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+
+    .student-info {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    table {
+        display: block;
+        overflow-x: auto;
+>>>>>>> 7dd64ab7236d2d413916d3989d6ea64b0bb306a8
+    }
+} 

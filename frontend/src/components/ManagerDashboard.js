@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import '../styles/Dashboard.css';
 import axios from 'axios';
 import { useNavigate } from "react-router-dom";
@@ -8,8 +8,10 @@ const ManagerDashboard = () => {
     const [users, setUsers] = useState([]);
     const navigate = useNavigate();
     const [userRole, setUserRole] = useState(null);
-    const channel = new BroadcastChannel('auth');
-     useEffect(() => {
+    
+    const channel = useMemo(() => new BroadcastChannel('auth'), []);
+
+    useEffect(() => {
 
         const handleStorageChange = (event) => {
               if (event.key === 'loginEvent' && event.newValue === 'loggedIn') {

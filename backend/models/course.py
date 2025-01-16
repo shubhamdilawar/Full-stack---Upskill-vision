@@ -12,11 +12,14 @@ class Course(db.Model):
     created_date = db.Column(db.DateTime, default=datetime.utcnow)
     duration = db.Column(db.Integer)  # Duration in days
     status = db.Column(db.String(20), default='active')  # active, archived
+<<<<<<< HEAD
     category = db.Column(db.String(50))
     difficulty_level = db.Column(db.String(50))
     prerequisites = db.Column(db.Text)
     learning_outcomes = db.Column(db.Text)
     max_participants = db.Column(db.Integer)
+=======
+>>>>>>> 7dd64ab7236d2d413916d3989d6ea64b0bb306a8
     
     # Relationships
     instructor = db.relationship("User", backref="courses")
@@ -32,6 +35,7 @@ class Course(db.Model):
             'start_date': self.start_date.strftime('%Y-%m-%d'),
             'end_date': self.end_date.strftime('%Y-%m-%d'),
             'duration': self.duration,
+<<<<<<< HEAD
             'category': self.category,
             'difficulty_level': self.difficulty_level,
             'prerequisites': self.prerequisites,
@@ -41,3 +45,7 @@ class Course(db.Model):
         }
     
    
+=======
+            'status': self.status
+        }
+>>>>>>> 7dd64ab7236d2d413916d3989d6ea64b0bb306a8

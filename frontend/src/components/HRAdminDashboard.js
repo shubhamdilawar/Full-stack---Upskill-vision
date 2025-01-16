@@ -4,7 +4,10 @@ import axios from '../utils/axios';
 import { useNavigate } from "react-router-dom";
 import BannerImage from '../assets/banner.png';
 import AdminEditSuite from './AdminEditSuite';
+<<<<<<< HEAD
 import ParticipantPerformance from './ParticipantPerformance';
+=======
+>>>>>>> 7dd64ab7236d2d413916d3989d6ea64b0bb306a8
 
 const HRAdminDashboard = () => {
     const [users, setUsers] = useState([]);
@@ -14,7 +17,10 @@ const HRAdminDashboard = () => {
     const [activeTab, setActiveTab] = useState('users');
     const [searchTerm, setSearchTerm] = useState('');
     const [roleFilter, setRoleFilter] = useState('all');
+<<<<<<< HEAD
     const [currentUserId, setCurrentUserId] = useState(null);
+=======
+>>>>>>> 7dd64ab7236d2d413916d3989d6ea64b0bb306a8
 
     const fetchUsers = useCallback(async () => {
         const token = localStorage.getItem('token');
@@ -42,11 +48,21 @@ const HRAdminDashboard = () => {
         const token = localStorage.getItem('token');
         if (token) {
             try {
+<<<<<<< HEAD
                 const response = await axios.get("/auth/current_user", {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 if (response.status === 200) {
                     setCurrentUserId(response.data.id);
+=======
+                const response = await axios.get("http://127.0.0.1:5000/auth/current_user", {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (response.status === 200) {
+                    setUserRole(response.data.role);
+                } else {
+                    console.error("Failed to fetch user data:", response);
+>>>>>>> 7dd64ab7236d2d413916d3989d6ea64b0bb306a8
                 }
             } catch (error) {
                 console.error("Error fetching user data:", error);
@@ -95,6 +111,7 @@ const HRAdminDashboard = () => {
                 {},
                 {
                     headers: { 'Authorization': `Bearer ${token}` }
+<<<<<<< HEAD
                 }
             );
             if (response.status === 200) {
@@ -125,6 +142,40 @@ const HRAdminDashboard = () => {
             }
         } catch (error) {
             console.error("Error removing user:", error);
+=======
+                }
+            );
+            if (response.status === 200) {
+                await fetchUsers();
+            }
+        } catch (error) {
+            console.error("Error approving user:", error);
+        }
+    };
+
+    const isCurrentUser = (userId) => {
+        const currentUserId = localStorage.getItem('user_id');
+        return userId === currentUserId;
+    };
+
+    const handleRemove = async (userId) => {
+        if (isCurrentUser(userId)) {
+            alert('You cannot remove your own account!');
+            return;
+        }
+
+        if (window.confirm('Are you sure you want to remove this user?')) {
+            try {
+                const response = await axios.delete(`/auth/users/${userId}`);
+                if (response.status === 200) {
+                    setUsers(prevUsers => prevUsers.filter(user => user._id !== userId));
+                    console.log('User removed successfully');
+                }
+            } catch (error) {
+                console.error("Error removing user:", error);
+                alert('Failed to remove user. Please try again.');
+            }
+>>>>>>> 7dd64ab7236d2d413916d3989d6ea64b0bb306a8
         }
     };
 
@@ -215,12 +266,15 @@ const HRAdminDashboard = () => {
                         onClick={() => setActiveTab('courses')}
                     >
                         Course Management
+<<<<<<< HEAD
                     </button>
                     <button 
                         className={`tab-btn ${activeTab === 'performance' ? 'active' : ''}`}
                         onClick={() => setActiveTab('performance')}
                     >
                         Performance Analytics
+=======
+>>>>>>> 7dd64ab7236d2d413916d3989d6ea64b0bb306a8
                     </button>
                 </div>
 
@@ -286,8 +340,13 @@ const HRAdminDashboard = () => {
                                                 <button
                                                     onClick={() => handleRemove(user._id)}
                                                     className="remove-btn"
+<<<<<<< HEAD
                                                     disabled={user._id === currentUserId}
                                                     title={user._id === currentUserId ? "You cannot remove your own account" : "Remove user"}
+=======
+                                                    disabled={isCurrentUser(user._id)}
+                                                    title={isCurrentUser(user._id) ? "You cannot remove your own account" : "Remove user"}
+>>>>>>> 7dd64ab7236d2d413916d3989d6ea64b0bb306a8
                                                 >
                                                     Remove
                                                 </button>
@@ -295,7 +354,10 @@ const HRAdminDashboard = () => {
                                                     value={user.status}
                                                     onChange={(e) => handleStatusChange(user._id, e.target.value)}
                                                     className="status-select"
+<<<<<<< HEAD
                                                     disabled={user._id === currentUserId}
+=======
+>>>>>>> 7dd64ab7236d2d413916d3989d6ea64b0bb306a8
                                                 >
                                                     <option value="pending">Pending</option>
                                                     <option value="approved">Approved</option>
@@ -315,8 +377,11 @@ const HRAdminDashboard = () => {
                 )}
 
                 {activeTab === 'courses' && <AdminEditSuite />}
+<<<<<<< HEAD
 
                 {activeTab === 'performance' && <ParticipantPerformance />}
+=======
+>>>>>>> 7dd64ab7236d2d413916d3989d6ea64b0bb306a8
             </div>
             <p className="inspirational-quote">
                 "The best way to predict the future is to create it." — Peter Drucker

@@ -148,6 +148,7 @@ const InstructorDashboard = () => {
             if (channel) {
                 channel.postMessage('logout');
                 channel.close();
+<<<<<<< HEAD
             }
             
             navigate("/");
@@ -221,6 +222,94 @@ const InstructorDashboard = () => {
         }
     };
 
+=======
+            }
+            
+            navigate("/");
+        } catch (error) {
+            console.error('Error during logout:', error);
+            navigate("/");
+        }
+    };
+
+    const handleEditCourse = (course) => {
+        try {
+            // Validate course object
+            if (!course || !course._id) {
+                console.error('Invalid course data:', course);
+                return;
+            }
+
+            console.log('Editing course:', course);
+            setSelectedCourse({
+                ...course,
+                id: course._id  // Ensure we have both id and _id
+            });
+            setShowEditModal(true);
+        } catch (err) {
+            console.error('Error preparing course for edit:', err);
+        }
+    };
+
+    const handleShowDetails = (course) => {
+        try {
+            // Validate course and course ID
+            if (!course || (!course._id && !course.id)) {
+                console.error('Invalid course data:', course);
+                alert('Cannot view details: Invalid course data');
+                return;
+            }
+
+            // Get the correct course ID
+            const courseId = course._id || course.id;
+            
+            console.log('Viewing details for course:', {
+                courseId,
+                course: course
+            });
+
+            navigate(`/course/${courseId}/details`);
+        } catch (error) {
+            console.error('Error navigating to course details:', error);
+            alert('Failed to view course details');
+        }
+    };
+
+    const handleRemoveCourse = async (courseId) => {
+        try {
+            // Validate courseId
+            if (!courseId) {
+                console.error('Invalid course ID:', courseId);
+                alert('Cannot delete course: Invalid course ID');
+                return;
+            }
+
+            // Debug log
+            console.log('Attempting to delete course:', {
+                courseId,
+                userRole: localStorage.getItem('role'),
+                userId: localStorage.getItem('user_id')
+            });
+
+            // Confirm deletion
+            if (!window.confirm('Are you sure you want to remove this course?')) {
+                return;
+            }
+
+            const response = await axios.delete(`/courses/delete_course/${courseId}`);
+            
+            if (response.status === 200) {
+                console.log('Course deleted successfully:', response.data);
+                await fetchInstructorCourses(); // Refresh the courses list
+                alert('Course removed successfully');
+            }
+        } catch (error) {
+            console.error('Error removing course:', error);
+            alert(error.response?.data?.message || 'Failed to remove course. Please try again.');
+        }
+    };
+
+>>>>>>> 7dd64ab7236d2d413916d3989d6ea64b0bb306a8
     const calculateDuration = (startDate, endDate) => {
         if (!startDate || !endDate) return 0;
         const start = new Date(startDate);

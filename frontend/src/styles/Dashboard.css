@@ -2,8 +2,13 @@
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+<<<<<<< HEAD
   background-color: #f9f6f6;
   padding: 2rem;
+=======
+  background-color: #f5f5f5;
+  padding: 0;
+>>>>>>> 7dd64ab7236d2d413916d3989d6ea64b0bb306a8
   margin: 0;
   width: 100%;
 }
@@ -462,6 +467,7 @@ p {
 }
 
 .filter-select {
+<<<<<<< HEAD
     padding: 0.75rem;
     border: 1px solid #ddd;
     border-radius: 4px;
@@ -470,11 +476,26 @@ p {
     font-size: 0.9rem;
     min-width: 200px;
     cursor: pointer;
+=======
+    align-self: flex-start;
+    min-width: 200px;
+    padding: 0.75rem 1rem;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    font-size: 1rem;
+    background: #f5f5f5;
+    cursor: pointer;
+    transition: all 0.3s ease;
+>>>>>>> 7dd64ab7236d2d413916d3989d6ea64b0bb306a8
 }
 
 .filter-select:focus {
     outline: none;
     border-color: #1976d2;
+<<<<<<< HEAD
+=======
+    background: white;
+>>>>>>> 7dd64ab7236d2d413916d3989d6ea64b0bb306a8
     box-shadow: 0 0 0 2px rgba(25, 118, 210, 0.1);
 }
 
@@ -546,6 +567,7 @@ tr.suspended-user {
 .status-select option[value="suspended"] {
     color: #d32f2f;
     font-weight: 500;
+<<<<<<< HEAD
 }
 
 .dashboard-card,
@@ -837,4 +859,6 @@ tr[data-is-current-user="true"] {
 
 tr[data-is-current-user="true"] td {
     color: #666;
+=======
+>>>>>>> 7dd64ab7236d2d413916d3989d6ea64b0bb306a8
 }

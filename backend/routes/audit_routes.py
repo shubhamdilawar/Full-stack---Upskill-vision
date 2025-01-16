@@ -26,12 +26,15 @@ def log_action(user_id, action_type, course_id, details):
 @cross_origin()
 @token_required
 def get_audit_trail(current_user):
+<<<<<<< HEAD
     if request.method == "OPTIONS":
         response = jsonify({'message': 'OK'})
         response.headers.add('Access-Control-Allow-Methods', 'GET, OPTIONS')
         response.headers.add('Access-Control-Allow-Headers', 'Content-Type, Authorization')
         return response, 200
         
+=======
+>>>>>>> 7dd64ab7236d2d413916d3989d6ea64b0bb306a8
     try:
         if current_user['role'] not in ['HR Admin', 'Instructor']:
             return jsonify({'error': 'Unauthorized access'}), 403
@@ -41,6 +44,7 @@ def get_audit_trail(current_user):
         action_type = request.args.get('action_type')
         user_role = request.args.get('user_role')
 
+<<<<<<< HEAD
         # Build the filter query
         if action_type:
             filters['action_type'] = action_type
@@ -87,6 +91,24 @@ def get_audit_trail(current_user):
 
         # Format the audit logs
         audit_logs = []
+=======
+        if action_type:
+            filters['action_type'] = action_type
+        if user_role:
+            filters['user_role'] = user_role
+
+        # Fetch audit logs with pagination
+        page = max(1, int(request.args.get('page', 1)))  # Ensure page is at least 1
+        per_page = int(request.args.get('per_page', 10))
+        skip = (page - 1) * per_page
+
+        # Format the audit logs
+        audit_logs = []
+        raw_logs = list(audit_log_collection.find(
+            filters
+        ).sort('timestamp', -1).skip(skip).limit(per_page))
+
+>>>>>>> 7dd64ab7236d2d413916d3989d6ea64b0bb306a8
         for log in raw_logs:
             try:
                 # Get user details
@@ -103,6 +125,7 @@ def get_audit_trail(current_user):
                     else:
                         user_name = user.get('email', 'Unknown User')
 
+<<<<<<< HEAD
                 # Get course details from the map
                 course_id = log.get('course_id')
                 course = courses_map.get(course_id) if course_id else None
@@ -126,6 +149,20 @@ def get_audit_trail(current_user):
                     'user_role': user.get('role') if user else 'Unknown Role',
                     'action_type': log.get('action_type', 'unknown_action'),
                     'details': log.get('details', {}),
+=======
+                # Get course details
+                course_id = log.get('course_id')
+                course = courses_collection.find_one({'_id': ObjectId(course_id)}) if course_id else None
+                course_title = course.get('course_title', 'Unknown Course') if course else 'Unknown Course'
+
+                formatted_log = {
+                    'timestamp': log.get('timestamp').isoformat() if log.get('timestamp') else None,
+                    'user_id': str(log.get('user_id')),
+                    'user_name': user_name,
+                    'action_type': str(log.get('action_type')),
+                    'details': str(log.get('details')),
+                    'course_id': str(course_id) if course_id else '',
+>>>>>>> 7dd64ab7236d2d413916d3989d6ea64b0bb306a8
                     'course_title': course_title
                 }
                 audit_logs.append(formatted_log)

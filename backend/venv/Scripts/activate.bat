@@ -8,7 +8,11 @@ if defined _OLD_CODEPAGE (
     "%SystemRoot%\System32\chcp.com" 65001 > nul
 )
 
+<<<<<<< HEAD
 set VIRTUAL_ENV=C:\Users\Asus\Documents\Upskill-Vision-master - C\Upskill-Vision-masterss\backend\venv
+=======
+set VIRTUAL_ENV=C:\Users\Asus\Documents\Upskill-Vision-master - C - Copy\Upskill-Vision-masterss\backend\venv
+>>>>>>> 7dd64ab7236d2d413916d3989d6ea64b0bb306a8
 
 if not defined PROMPT set PROMPT=$P$G
 

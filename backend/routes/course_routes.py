@@ -1,5 +1,8 @@
 from flask import Blueprint, request, jsonify
+<<<<<<< HEAD
 from flask_cors import cross_origin
+=======
+>>>>>>> 7dd64ab7236d2d413916d3989d6ea64b0bb306a8
 from backend.db import (
     courses_collection, 
     enrollments_collection,
@@ -7,13 +10,18 @@ from backend.db import (
     assignments_collection,
     modules_collection,
     quizzes_collection,
+<<<<<<< HEAD
     audit_log_collection,
     submissions_collection
+=======
+    audit_log_collection
+>>>>>>> 7dd64ab7236d2d413916d3989d6ea64b0bb306a8
 )
 from backend.routes.auth_routes import token_required
 from backend.scripts.seed_data import seed_course_content
 from bson import ObjectId
 from datetime import datetime
+<<<<<<< HEAD
 from werkzeug.utils import secure_filename
 import os
 
@@ -90,13 +98,23 @@ def get_formatted_quizzes(course_id):
         print(f"Error formatting quizzes: {str(e)}")
         return []
 
+=======
+from .audit_routes import log_action
+
+courses = Blueprint('courses', __name__)
+
+>>>>>>> 7dd64ab7236d2d413916d3989d6ea64b0bb306a8
 @courses.route('/courses', methods=['GET'])
 @token_required
 def get_courses(current_user):
     try:
         # Get filter parameter
         filter_type = request.args.get('filter', 'all')
+<<<<<<< HEAD
         print(f"Filter type: {filter_type}")
+=======
+        print(f"Filter type: {filter_type}")  # Debug log
+>>>>>>> 7dd64ab7236d2d413916d3989d6ea64b0bb306a8
         
         # Get all courses
         courses = list(courses_collection.find())
@@ -107,6 +125,7 @@ def get_courses(current_user):
             try:
                 # Ensure _id is properly converted to string
                 course_id = str(course['_id'])
+<<<<<<< HEAD
                 
                 # Get enrollment count for this course
                 enrollment_count = enrollments_collection.count_documents({
@@ -128,6 +147,21 @@ def get_courses(current_user):
                 }
 
                 # Check enrollment status for current user
+=======
+                course_data = {
+                    '_id': course_id,  # Use consistent _id field
+                    'course_title': course.get('course_title', 'Untitled'),
+                    'description': course.get('description', ''),
+                    'instructor_name': course.get('instructor_name', 'Unknown'),
+                    'instructor_id': str(course.get('instructor_id', '')),  # Convert to string
+                    'start_date': course.get('start_date'),
+                    'end_date': course.get('end_date'),
+                    'duration': course.get('duration'),
+                    'enrollment_status': 'Not Enrolled'
+                }
+
+                # Check enrollment status
+>>>>>>> 7dd64ab7236d2d413916d3989d6ea64b0bb306a8
                 enrollment = enrollments_collection.find_one({
                     'course_id': course_id,
                     'student_id': current_user['user_id']
@@ -144,8 +178,12 @@ def get_courses(current_user):
                     continue
 
                 formatted_courses.append(course_data)
+<<<<<<< HEAD
                 print(f"Formatted course: {course_data}")
 
+=======
+                print(f"Formatted course: {course_data}")  # Debug log
+>>>>>>> 7dd64ab7236d2d413916d3989d6ea64b0bb306a8
             except Exception as course_error:
                 print(f"Error processing course: {str(course_error)}")
                 continue
@@ -159,6 +197,7 @@ def get_courses(current_user):
             'details': str(e)
         }), 500
 
+<<<<<<< HEAD
 @courses.route('/<course_id>/enroll', methods=['POST', 'OPTIONS'])
 @token_required
 def enroll_course(current_user, course_id):
@@ -178,6 +217,35 @@ def enroll_course(current_user, course_id):
         course = courses_collection.find_one({'_id': course_object_id})
         if not course:
             return jsonify({'error': 'Course not found'}), 404
+=======
+@courses.route('/enroll/<course_id>', methods=['POST', 'OPTIONS'])
+@token_required
+def enroll_course(current_user, course_id):
+    try:
+        print(f"\n=== Enrollment Request ===")
+        print(f"Course ID: {course_id}")
+        print(f"User ID: {current_user.get('user_id')}")
+        print(f"Headers: {dict(request.headers)}")
+
+        # Check if course exists
+        try:
+            course = courses_collection.find_one({'_id': ObjectId(course_id)})
+            print(f"\nFound course: {course}")
+        except Exception as e:
+            print(f"\nError finding course: {str(e)}")
+            return jsonify({'error': f'Invalid course ID format: {str(e)}'}), 400
+
+        if not course:
+            print(f"\nCourse not found with ID: {course_id}")
+            # Get list of all courses
+            all_courses = list(courses_collection.find())
+            print(f"Available courses: {[str(c.get('_id')) for c in all_courses]}")
+            return jsonify({
+                'error': 'Course not found',
+                'message': 'The specified course does not exist',
+                'available_courses': [str(c.get('_id')) for c in all_courses]
+            }), 404
+>>>>>>> 7dd64ab7236d2d413916d3989d6ea64b0bb306a8
 
         # Check if already enrolled
         existing_enrollment = enrollments_collection.find_one({
@@ -186,6 +254,10 @@ def enroll_course(current_user, course_id):
         })
 
         if existing_enrollment:
+<<<<<<< HEAD
+=======
+            print(f"User already enrolled in course: {course_id}")
+>>>>>>> 7dd64ab7236d2d413916d3989d6ea64b0bb306a8
             return jsonify({'message': 'Already enrolled in this course'}), 400
 
         # Create new enrollment
@@ -198,6 +270,7 @@ def enroll_course(current_user, course_id):
             'last_accessed': datetime.utcnow()
         }
 
+<<<<<<< HEAD
         result = enrollments_collection.insert_one(enrollment)
 
         if result.inserted_id:
@@ -206,6 +279,22 @@ def enroll_course(current_user, course_id):
                 'enrollment_id': str(result.inserted_id)
             }), 200
         else:
+=======
+        print(f"Creating enrollment: {enrollment}")
+
+        # Insert enrollment
+        result = enrollments_collection.insert_one(enrollment)
+
+        if result.inserted_id:
+            print(f"Successfully enrolled. Enrollment ID: {result.inserted_id}")
+            return jsonify({
+                'message': 'Successfully enrolled in course',
+                'enrollment_id': str(result.inserted_id),
+                'course_title': course.get('course_title')
+            }), 200
+        else:
+            print("Failed to insert enrollment")
+>>>>>>> 7dd64ab7236d2d413916d3989d6ea64b0bb306a8
             return jsonify({'error': 'Failed to enroll in course'}), 500
 
     except Exception as e:
@@ -364,6 +453,16 @@ def create_course(current_user):
                 print("Warning: Failed to seed course content")
             
             print(f"Course created with ID: {result.inserted_id}")  # Debug log
+<<<<<<< HEAD
+=======
+            # Log the course creation
+            log_action(
+                user_id=current_user['user_id'],
+                action_type='course_created',
+                course_id=str(result.inserted_id),
+                details=f"Course '{data.get('course_title')}' created"
+            )
+>>>>>>> 7dd64ab7236d2d413916d3989d6ea64b0bb306a8
             return jsonify({
                 'message': 'Course created successfully',
                 'course_id': str(result.inserted_id)
@@ -380,6 +479,7 @@ def create_course(current_user):
 @token_required
 def get_course_details(current_user, course_id):
     try:
+<<<<<<< HEAD
         # Convert course_id to ObjectId
         course_object_id = ObjectId(course_id)
 
@@ -459,6 +559,121 @@ def get_course_details(current_user, course_id):
             'stats': stats
         }
 
+=======
+        # Validate course_id
+        if not course_id or course_id == 'undefined':
+            return jsonify({
+                'error': 'Invalid course ID',
+                'message': 'Course ID cannot be empty or undefined'
+            }), 400
+
+        try:
+            course_object_id = ObjectId(course_id)
+        except Exception as e:
+            return jsonify({
+                'error': 'Invalid course ID format',
+                'message': str(e)
+            }), 400
+
+        # Find course
+        course = courses_collection.find_one({'_id': course_object_id})
+        
+        if not course:
+            return jsonify({
+                'error': 'Course not found',
+                'message': f'No course found with ID: {course_id}'
+            }), 404
+
+        print(f"Found course: {course}")
+
+        # Get enrollments and calculate statistics
+        enrollments = list(enrollments_collection.find({'course_id': str(course_id)}))
+        enrollment_stats = {
+            'totalEnrolled': len(enrollments),
+            'activeStudents': len([e for e in enrollments if e.get('status') == 'active']),
+            'completedStudents': len([e for e in enrollments if e.get('status') == 'completed']),
+            'averageProgress': sum(e.get('progress', 0) for e in enrollments) / len(enrollments) if enrollments else 0
+        }
+
+        # Format the response data
+        response_data = {
+            'course': {
+                '_id': str(course['_id']),
+                'course_title': course.get('course_title', 'Untitled'),
+                'description': course.get('description', ''),
+                'instructor_name': course.get('instructor_name', 'Unknown'),
+                'instructor_id': str(course.get('instructor_id', '')),
+                'start_date': course.get('start_date'),
+                'end_date': course.get('end_date'),
+                'duration': course.get('duration'),
+                'status': course.get('status', 'active'),
+                'created_at': course.get('created_at'),
+                'enrollment_status': 'Not Enrolled',
+                'progress': 0
+            },
+            'enrollmentStats': enrollment_stats,
+            'modules': [],
+            'assignments': [],
+            'quizzes': [],
+            'enrollments': []
+        }
+
+        # Get related data
+        try:
+            # Get modules
+            modules = list(modules_collection.find({'course_id': str(course_id)}))
+            modules_data = [{
+                '_id': str(module['_id']),
+                'title': module.get('title', ''),
+                'description': module.get('description', ''),
+                'content': module.get('content', []),
+                'order': module.get('order', 0)
+            } for module in modules]
+
+            # Get assignments
+            assignments = list(assignments_collection.find({'course_id': str(course_id)}))
+            assignments_data = [{
+                '_id': str(assignment['_id']),
+                'title': assignment.get('title', ''),
+                'description': assignment.get('description', ''),
+                'due_date': assignment.get('due_date'),
+                'total_points': assignment.get('points', 0)
+            } for assignment in assignments]
+
+            # Get quizzes
+            quizzes = list(quizzes_collection.find({'course_id': str(course_id)}))
+            quizzes_data = [{
+                '_id': str(quiz['_id']),
+                'title': quiz.get('title', ''),
+                'description': quiz.get('description', ''),
+                'time_limit': quiz.get('time_limit'),
+                'passing_score': quiz.get('passing_score', 70),
+                'attempts_allowed': quiz.get('attempts_allowed', 1)
+            } for quiz in quizzes]
+
+            # Check if current user is enrolled
+            user_enrollment = next((e for e in enrollments if str(e.get('student_id')) == str(current_user['user_id'])), None)
+            if user_enrollment:
+                response_data['course']['enrollment_status'] = user_enrollment.get('status', 'enrolled')
+                response_data['course']['progress'] = user_enrollment.get('progress', 0)
+
+            response_data.update({
+                'modules': modules_data,
+                'assignments': assignments_data,
+                'quizzes': quizzes_data,
+                'enrollments': [{
+                    'student_id': str(enrollment['student_id']),
+                    'status': enrollment['status'],
+                    'progress': enrollment['progress'],
+                    'enrolled_at': enrollment['enrolled_at']
+                } for enrollment in enrollments]
+            })
+
+        except Exception as e:
+            print(f"Error fetching related data: {str(e)}")
+
+        print(f"Returning formatted response: {response_data}")
+>>>>>>> 7dd64ab7236d2d413916d3989d6ea64b0bb306a8
         return jsonify(response_data), 200
 
     except Exception as e:
@@ -468,6 +683,7 @@ def get_course_details(current_user, course_id):
             'details': str(e)
         }), 500
 
+<<<<<<< HEAD
 def calculate_overall_performance(enrollment):
     progress = enrollment.get('progress', 0)
     if progress >= 90:
@@ -585,6 +801,42 @@ def delete_course(current_user, course_id):
             'error': 'Failed to delete course',
             'details': str(e)
         }), 500
+=======
+@courses.route('/course/<course_id>', methods=['DELETE'])
+@token_required
+def delete_course(current_user, course_id):
+    try:
+        if current_user.get('role') != 'HR Admin':
+            return jsonify({'error': 'Unauthorized access'}), 403
+
+        print(f"Attempting to delete course: {course_id}")  # Debug log
+
+        # Convert string ID to ObjectId
+        course_object_id = ObjectId(course_id)
+        
+        # Delete the course
+        result = courses_collection.delete_one({'_id': course_object_id})
+
+        if result.deleted_count == 1:
+            # Delete related enrollments
+            enrollments_collection.delete_many({'course_id': course_id})
+            print(f"Course and related enrollments deleted successfully")
+            # Log the course deletion
+            log_action(
+                user_id=current_user['user_id'],
+                action_type='course_deleted',
+                course_id=course_id,
+                details=f"Course deleted"
+            )
+            return jsonify({'message': 'Course deleted successfully'}), 200
+            
+        print(f"Course not found with ID: {course_id}")
+        return jsonify({'error': 'Course not found'}), 404
+
+    except Exception as e:
+        print(f"Error deleting course: {str(e)}")
+        return jsonify({'error': 'Failed to delete course'}), 500
+>>>>>>> 7dd64ab7236d2d413916d3989d6ea64b0bb306a8
 
 @courses.route('/<course_id>/students', methods=['GET'])
 @token_required
@@ -633,6 +885,7 @@ def get_course_assignments(current_user, course_id):
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
+<<<<<<< HEAD
 @courses.route('/<course_id>/modules', methods=['GET', 'POST'])
 @token_required
 def manage_modules(current_user, course_id):
@@ -800,6 +1053,23 @@ def add_assignment(current_user, course_id, module_id):
     except Exception as e:
         print(f"Error adding assignment: {str(e)}")
         return jsonify({'error': 'Failed to add assignment'}), 500
+=======
+@courses.route('/<course_id>/modules', methods=['GET'])
+@token_required
+def get_course_modules(current_user, course_id):
+    try:
+        modules = list(modules_collection.find({'course_id': course_id}))
+        return jsonify({
+            'modules': [{
+                '_id': str(module['_id']),
+                'title': module.get('title'),
+                'description': module.get('description'),
+                'content': module.get('content', [])
+            } for module in modules]
+        }), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+>>>>>>> 7dd64ab7236d2d413916d3989d6ea64b0bb306a8
 
 @courses.route('/<course_id>/quizzes', methods=['GET'])
 @token_required
@@ -810,7 +1080,11 @@ def get_course_quizzes(current_user, course_id):
             'quizzes': [{
                 '_id': str(quiz['_id']),
                 'title': quiz.get('title'),
+<<<<<<< HEAD
                 'description': quiz.get('description', ''),
+=======
+                'description': quiz.get('description'),
+>>>>>>> 7dd64ab7236d2d413916d3989d6ea64b0bb306a8
                 'questionCount': len(quiz.get('questions', [])),
                 'timeLimit': quiz.get('time_limit'),
                 'attempts': quiz.get('max_attempts')
@@ -844,6 +1118,7 @@ def log_instructor_action(user_id, course_id, action, details):
     except Exception as e:
         print(f"Error logging action: {str(e)}")
 
+<<<<<<< HEAD
 @courses.route('/update-course/<course_id>', methods=['PUT', 'OPTIONS'])
 @token_required
 def update_course(current_user, course_id):
@@ -913,6 +1188,64 @@ def update_course(current_user, course_id):
             'error': 'Failed to update course',
             'details': str(e)
         }), 500
+=======
+@courses.route('/update-course/<course_id>', methods=['PUT'])
+@token_required
+def update_course(current_user, course_id):
+    try:
+        if current_user.get('role') != 'HR Admin':
+            return jsonify({'error': 'Unauthorized access'}), 403
+
+        data = request.get_json()
+        print(f"Updating course {course_id} with data:", data)
+
+        # Validate required fields
+        required_fields = ['course_title', 'description', 'instructor_id', 'start_date', 'end_date', 'duration']
+        if not all(field in data for field in required_fields):
+            return jsonify({'error': 'Missing required fields'}), 400
+
+        # Verify instructor exists
+        instructor = users_collection.find_one({
+            '_id': ObjectId(data['instructor_id']),
+            'role': 'Instructor',
+            'status': 'approved'
+        })
+        
+        if not instructor:
+            return jsonify({'error': 'Invalid instructor selected'}), 400
+
+        # Update course
+        update_data = {
+            'course_title': data['course_title'],
+            'description': data['description'],
+            'instructor_id': ObjectId(data['instructor_id']),
+            'instructor_name': f"{instructor.get('first_name', '')} {instructor.get('last_name', '')}",
+            'start_date': data['start_date'],
+            'end_date': data['end_date'],
+            'duration': data['duration'],
+            'updated_at': datetime.utcnow()
+        }
+
+        result = courses_collection.update_one(
+            {'_id': ObjectId(course_id)},
+            {'$set': update_data}
+        )
+
+        if result.modified_count == 1:
+            # Log the course update
+            log_action(
+                user_id=current_user['user_id'],
+                action_type='course_updated',
+                course_id=course_id,
+                details=f"Course '{data.get('course_title')}' updated"
+            )
+            return jsonify({'message': 'Course updated successfully'}), 200
+        return jsonify({'error': 'Course not found'}), 404
+
+    except Exception as e:
+        print(f"Error updating course: {str(e)}")
+        return jsonify({'error': 'Failed to update course'}), 500
+>>>>>>> 7dd64ab7236d2d413916d3989d6ea64b0bb306a8
 
 @courses.route('/course/<course_id>/audit-log', methods=['GET'])
 @token_required
@@ -944,6 +1277,7 @@ def get_course_audit_log(current_user, course_id):
             'details': str(e)
         }), 500
 
+<<<<<<< HEAD
 @courses.route('/<course_id>/modules/<module_id>/upload', methods=['POST'])
 @token_required
 def upload_module_content(current_user, course_id, module_id):
@@ -1030,15 +1364,90 @@ def get_user_details(current_user, user_id):
 
         # Verify user exists
         user = users_collection.find_one({'_id': ObjectId(user_id)})
+=======
+@courses.route('/add-course', methods=['POST'])
+@token_required
+def add_course(current_user):
+    try:
+        if current_user.get('role') != 'HR Admin':
+            return jsonify({'error': 'Unauthorized access'}), 403
+
+        data = request.get_json()
+        
+        # Generate a course ID (e.g., COURSE001, COURSE002, etc.)
+        last_course = courses_collection.find_one(
+            {},
+            sort=[('course_code', -1)]  # Get the last course by course_code
+        )
+        
+        if last_course and 'course_code' in last_course:
+            last_num = int(last_course['course_code'].replace('COURSE', ''))
+            new_code = f'COURSE{str(last_num + 1).zfill(3)}'
+        else:
+            new_code = 'COURSE001'
+
+        # Validate instructor exists
+        instructor = users_collection.find_one({
+            '_id': ObjectId(data.get('instructor_id')),
+            'role': 'Instructor',
+            'status': 'approved'
+        })
+        
+        if not instructor:
+            return jsonify({'error': 'Invalid instructor selected'}), 400
+
+        # Create course document
+        course = {
+            'course_code': new_code,  # Add course code
+            'course_title': data.get('course_title'),
+            'description': data.get('description'),
+            'instructor_id': ObjectId(data.get('instructor_id')),
+            'instructor_name': f"{instructor.get('first_name', '')} {instructor.get('last_name', '')}",
+            'start_date': data.get('start_date'),
+            'end_date': data.get('end_date'),
+            'duration': data.get('duration'),
+            'status': 'active',
+            'created_at': datetime.utcnow()
+        }
+
+        result = courses_collection.insert_one(course)
+        
+        return jsonify({
+            'message': 'Course created successfully',
+            'course_id': str(result.inserted_id),
+            'course_code': new_code
+        }), 201
+
+    except Exception as e:
+        print(f"Error creating course: {str(e)}")
+        return jsonify({'error': 'Failed to create course'}), 500
+
+@courses.route('/user/<user_id>', methods=['GET'])
+@token_required
+def get_user_details(current_user, user_id):
+    try:
+        # Verify the user is requesting their own details
+        if str(current_user.get('user_id')) != str(user_id):
+            return jsonify({'error': 'Unauthorized access'}), 403
+
+        # Find user in database
+        user = users_collection.find_one({'_id': ObjectId(user_id)})
+        
+>>>>>>> 7dd64ab7236d2d413916d3989d6ea64b0bb306a8
         if not user:
             return jsonify({'error': 'User not found'}), 404
 
         # Return user details
+<<<<<<< HEAD
         return jsonify({
+=======
+        user_data = {
+>>>>>>> 7dd64ab7236d2d413916d3989d6ea64b0bb306a8
             'first_name': user.get('first_name', ''),
             'last_name': user.get('last_name', ''),
             'email': user.get('email', ''),
             'role': user.get('role', '')
+<<<<<<< HEAD
         }), 200
 
     except Exception as e:
@@ -2355,3 +2764,14 @@ def submit_assignment(current_user, course_id, assignment_id):
     except Exception as e:
         print(f"Error submitting assignment: {str(e)}")
         return jsonify({'error': 'Failed to submit assignment'}), 500
+=======
+        }
+        
+        print(f"Returning user details for {user_id}:", user_data)  # Debug log
+        
+        return jsonify(user_data), 200
+
+    except Exception as e:
+        print(f"Error fetching user details: {str(e)}")
+        return jsonify({'error': 'Failed to fetch user details'}), 500
+>>>>>>> 7dd64ab7236d2d413916d3989d6ea64b0bb306a8

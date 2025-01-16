@@ -1,6 +1,9 @@
 from pymongo import MongoClient
 import sys
+<<<<<<< HEAD
 from bson import ObjectId
+=======
+>>>>>>> 7dd64ab7236d2d413916d3989d6ea64b0bb306a8
 
 def get_db_connection():
     try:
@@ -32,10 +35,13 @@ try:
     submissions_collection.create_index([("assignment_id", 1), ("student_id", 1)])
     audit_log_collection.create_index([("course_id", 1), ("timestamp", -1)])
     
+<<<<<<< HEAD
     # Create indexes if needed
     modules_collection.create_index([('course_id', 1)])
     modules_collection.create_index([('instructor_id', 1)])
     
+=======
+>>>>>>> 7dd64ab7236d2d413916d3989d6ea64b0bb306a8
     print("Database and collections are ready!")
 except Exception as e:
     print(f"Failed to initialize database: {str(e)}")

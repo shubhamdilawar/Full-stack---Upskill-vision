@@ -42,6 +42,7 @@ const CreateCourseModal = ({ onClose, onCourseCreated }) => {
         // Fetch instructor details from the backend
         const fetchInstructorDetails = async () => {
             try {
+<<<<<<< HEAD
                 const userId = localStorage.getItem('user_id');
                 const response = await axios.get(`/courses/user/${userId}`, {
                     headers: { 
@@ -49,6 +50,11 @@ const CreateCourseModal = ({ onClose, onCourseCreated }) => {
                         'Content-Type': 'application/json'
                     }
                 });
+=======
+                // Changed from /auth/user to /courses/user
+                const response = await axios.get(`/courses/user/${userId}`);
+                console.log('User details response:', response.data); // Debug log
+>>>>>>> 7dd64ab7236d2d413916d3989d6ea64b0bb306a8
                 
                 if (response.data) {
                     const { first_name, last_name, email } = response.data;
@@ -71,7 +77,11 @@ const CreateCourseModal = ({ onClose, onCourseCreated }) => {
                     });
                 }
             } catch (error) {
+<<<<<<< HEAD
                 console.error('Error fetching instructor details:', error);
+=======
+                console.error('Error fetching instructor details:', error.response?.data || error.message);
+>>>>>>> 7dd64ab7236d2d413916d3989d6ea64b0bb306a8
                 setError('Failed to fetch instructor details. Please try again.');
             }
         };

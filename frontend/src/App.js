@@ -12,10 +12,13 @@ import CourseOverview from './components/CourseOverview';
 import AdminEditSuite from './components/AdminEditSuite';
 import ProtectedRoute from './components/ProtectedRoute';
 import CourseDetails from './pages/CourseDetails';
+<<<<<<< HEAD
 import CourseInsights from './components/CourseInsights';
 import StudentDetails from './components/StudentDetails';
 import ParticipantCourseDetails from './components/ParticipantCourseDetails';
 import QuizPage from './components/QuizPage';
+=======
+>>>>>>> 7dd64ab7236d2d413916d3989d6ea64b0bb306a8
 
 function App() {
   return (
@@ -74,6 +77,7 @@ function App() {
             </ProtectedRoute>
           } 
         />
+<<<<<<< HEAD
         <Route 
           path="/course/:courseId/insights" 
           element={
@@ -99,6 +103,8 @@ function App() {
             </ProtectedRoute>
           }
         />
+=======
+>>>>>>> 7dd64ab7236d2d413916d3989d6ea64b0bb306a8
 
         {/* 404 Route */}
         <Route path="*" element={

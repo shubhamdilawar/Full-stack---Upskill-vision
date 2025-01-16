@@ -8,7 +8,11 @@ const AuditTrail = () => {
     const [error, setError] = useState(null);
     const [filters, setFilters] = useState({
         action_type: '',
+<<<<<<< HEAD
         user_role: 'all'
+=======
+        user_role: ''
+>>>>>>> 7dd64ab7236d2d413916d3989d6ea64b0bb306a8
     });
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
@@ -48,6 +52,7 @@ const AuditTrail = () => {
         setPage(1);
     };
 
+<<<<<<< HEAD
     const formatAction = (action) => {
         switch (action) {
             case 'course_created':
@@ -85,6 +90,8 @@ const AuditTrail = () => {
         { value: 'Participant', label: 'Participant' }
     ];
 
+=======
+>>>>>>> 7dd64ab7236d2d413916d3989d6ea64b0bb306a8
     return (
         <div className="audit-trail-container">
             <div className="audit-trail-banner">
@@ -98,11 +105,18 @@ const AuditTrail = () => {
                     value={filters.action_type}
                     onChange={handleFilterChange}
                 >
+<<<<<<< HEAD
                     {actionOptions.map(option => (
                         <option key={option.value} value={option.value}>
                             {option.label}
                         </option>
                     ))}
+=======
+                    <option value="">All Actions</option>
+                    <option value="course_created">Course Created</option>
+                    <option value="course_updated">Course Updated</option>
+                    <option value="course_deleted">Course Deleted</option>
+>>>>>>> 7dd64ab7236d2d413916d3989d6ea64b0bb306a8
                 </select>
 
                 <select
@@ -110,11 +124,17 @@ const AuditTrail = () => {
                     value={filters.user_role}
                     onChange={handleFilterChange}
                 >
+<<<<<<< HEAD
                     {roleOptions.map(option => (
                         <option key={option.value} value={option.value}>
                             {option.label}
                         </option>
                     ))}
+=======
+                    <option value="">All Roles</option>
+                    <option value="HR Admin">HR Admin</option>
+                    <option value="Instructor">Instructor</option>
+>>>>>>> 7dd64ab7236d2d413916d3989d6ea64b0bb306a8
                 </select>
             </div>
 
@@ -139,8 +159,15 @@ const AuditTrail = () => {
                                 <tr key={index}>
                                     <td>{new Date(log.timestamp).toLocaleString()}</td>
                                     <td>{log.user_name}</td>
+<<<<<<< HEAD
                                     <td className={`action-type ${log.action_type}`}>
                                         {formatAction(log.action_type)}
+=======
+                                    <td>
+                                        {log.action_type === 'course_created' && 'Course Created'}
+                                        {log.action_type === 'course_updated' && 'Course Updated'}
+                                        {log.action_type === 'course_deleted' && 'Course Deleted'}
+>>>>>>> 7dd64ab7236d2d413916d3989d6ea64b0bb306a8
                                     </td>
                                     <td>{typeof log.details === 'string' ? log.details : JSON.stringify(log.details)}</td>
                                     <td>{log.course_title}</td>

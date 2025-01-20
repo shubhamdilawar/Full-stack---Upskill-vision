@@ -8,7 +8,6 @@ def create_app():
     app = Flask(__name__)
     
     # Configure CORS
-<<<<<<< HEAD
     CORS(app, 
         origins=["http://localhost:3000"],
         allow_credentials=True,
@@ -16,15 +15,11 @@ def create_app():
         methods=['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
         allow_headers=['Content-Type', 'Authorization']
     )
-=======
-    CORS(app, supports_credentials=True)
->>>>>>> 7dd64ab7236d2d413916d3989d6ea64b0bb306a8
 
     # Register blueprints
     app.register_blueprint(auth, url_prefix='/auth')
     app.register_blueprint(courses, url_prefix='/courses')
     app.register_blueprint(audit, url_prefix='/audit')
-<<<<<<< HEAD
 
     @app.after_request
     def after_request(response):
@@ -33,8 +28,6 @@ def create_app():
         response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
         response.headers.add('Access-Control-Allow-Credentials', 'true')
         return response
-=======
->>>>>>> 7dd64ab7236d2d413916d3989d6ea64b0bb306a8
 
     return app
 

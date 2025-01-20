@@ -1,20 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import axios from '../utils/axios';
 import '../styles/CourseOverview.css';
-<<<<<<< HEAD
 import CourseDetails from '../pages/CourseDetails';
-=======
-import CourseDetails from './CourseDetails';
->>>>>>> 7dd64ab7236d2d413916d3989d6ea64b0bb306a8
 import CreateCourseModal from './CreateCourseModal';
 import ErrorBoundary from './ErrorBoundary';
 import EditCourseModal from './EditCourseModal';
 
-<<<<<<< HEAD
 const CourseOverview = ({ onViewDetails }) => {
-=======
-const CourseOverview = () => {
->>>>>>> 7dd64ab7236d2d413916d3989d6ea64b0bb306a8
     const [courses, setCourses] = useState([]);
     const [filter, setFilter] = useState('all');
     const [loading, setLoading] = useState(true);
@@ -355,19 +347,7 @@ const CourseOverview = () => {
                                 </div>
                                 {getProgressIndicator(course)}
                                 <div className="course-actions">
-<<<<<<< HEAD
                                     
-=======
-                                    {(!course.enrollment_status || course.enrollment_status === 'Not Enrolled') && (
-                                        <button 
-                                            onClick={() => handleEnroll(course._id || course.id)}
-                                            className="enroll-btn"
-                                            disabled={enrollingCourseId === course._id}
-                                        >
-                                            {enrollingCourseId === course._id ? 'Enrolling...' : 'Enroll'}
-                                        </button>
-                                    )}
->>>>>>> 7dd64ab7236d2d413916d3989d6ea64b0bb306a8
                                     {course.enrollment_status === 'enrolled' && (
                                         <button 
                                             onClick={() => handleComplete(course._id || course.id)}
@@ -377,7 +357,6 @@ const CourseOverview = () => {
                                             {completingCourseId === course._id ? 'Marking Complete...' : 'Mark Complete'}
                                         </button>
                                     )}
-<<<<<<< HEAD
                                     {userRole === 'Participant' && (
                                         <button 
                                             className="view-details-btn"
@@ -396,21 +375,6 @@ const CourseOverview = () => {
                                             View Details
                                         </button>
                                     )}
-=======
-                                    <button 
-                                        className="details-btn"
-                                        onClick={(e) => {
-                                            e.preventDefault();
-                                            e.stopPropagation();
-                                            if (course && (course._id || course.id)) {
-                                                handleViewDetails(course);
-                                            }
-                                        }}
-                                        disabled={!course || (!course._id && !course.id)}
-                                    >
-                                        View Details
-                                    </button>
->>>>>>> 7dd64ab7236d2d413916d3989d6ea64b0bb306a8
                                     {userRole === 'Instructor' && 
                                      course.instructor_id === localStorage.getItem('user_id') && (
                                         <>

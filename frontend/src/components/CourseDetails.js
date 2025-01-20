@@ -1,10 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from '../utils/axios';
-<<<<<<< HEAD
 import ModuleManager from './ModuleManager';
-=======
->>>>>>> 7dd64ab7236d2d413916d3989d6ea64b0bb306a8
 import '../styles/CourseDetails.css';
 
 const CourseDetails = () => {
@@ -13,13 +10,9 @@ const CourseDetails = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [course, setCourse] = useState(null);
-<<<<<<< HEAD
     const [activeTab, setActiveTab] = useState('overview');
     const [userRole, setUserRole] = useState(null);
     const [isOwner, setIsOwner] = useState(false);
-=======
-    const [showEditModal, setShowEditModal] = useState(false);
->>>>>>> 7dd64ab7236d2d413916d3989d6ea64b0bb306a8
     const [stats, setStats] = useState({
         totalEnrolled: 0,
         activeStudents: 0,
@@ -27,11 +20,10 @@ const CourseDetails = () => {
         averageProgress: 0
     });
 
-<<<<<<< HEAD
     useEffect(() => {
         const fetchData = async () => {
-            try {
-                setLoading(true);
+        try {
+            setLoading(true);
                 const role = localStorage.getItem('role');
                 const userId = localStorage.getItem('user_id');
                 setUserRole(role);
@@ -47,22 +39,22 @@ const CourseDetails = () => {
                     setCourse(courseData);
                     setIsOwner(courseData.instructor_id === userId);
 
-                    if (response.data.enrollmentStats) {
-                        setStats({
-                            totalEnrolled: response.data.enrollmentStats.totalEnrolled || 0,
-                            activeStudents: response.data.enrollmentStats.activeStudents || 0,
-                            completedStudents: response.data.enrollmentStats.completedStudents || 0,
-                            averageProgress: response.data.enrollmentStats.averageProgress || 0
-                        });
-                    }
+            if (response.data.enrollmentStats) {
+                setStats({
+                    totalEnrolled: response.data.enrollmentStats.totalEnrolled || 0,
+                    activeStudents: response.data.enrollmentStats.activeStudents || 0,
+                    completedStudents: response.data.enrollmentStats.completedStudents || 0,
+                    averageProgress: response.data.enrollmentStats.averageProgress || 0
+                });
+            }
                 }
             } catch (err) {
                 console.error('Error fetching course details:', err);
                 setError('Failed to load course details');
-            } finally {
-                setLoading(false);
-            }
-        };
+        } finally {
+            setLoading(false);
+        }
+    };
 
         fetchData();
     }, [courseId]);
@@ -204,65 +196,6 @@ const CourseDetails = () => {
                 return renderAssignments();
             default:
                 return renderOverview();
-=======
-    const fetchCourseDetails = async () => {
-        try {
-            setLoading(true);
-            setError(null);
-
-            const response = await axios.get(`/courses/${courseId}/details`);
-            console.log('Course details response:', response.data);
-
-            if (!response.data) {
-                throw new Error('No data received from server');
-            }
-
-            // Set course data
-            setCourse(response.data.course || response.data);
-
-            // Set enrollment statistics
-            if (response.data.enrollmentStats) {
-                setStats({
-                    totalEnrolled: response.data.enrollmentStats.totalEnrolled || 0,
-                    activeStudents: response.data.enrollmentStats.activeStudents || 0,
-                    completedStudents: response.data.enrollmentStats.completedStudents || 0,
-                    averageProgress: response.data.enrollmentStats.averageProgress || 0
-                });
-            }
-        } catch (error) {
-            console.error('Error fetching course details:', error);
-            setError(error.response?.data?.message || 'Failed to load course details');
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    useEffect(() => {
-        if (courseId) {
-            fetchCourseDetails();
-        }
-    }, [courseId]);
-
-    const handleEditCourse = async (courseData) => {
-        try {
-            setLoading(true);
-            setError(null);
-
-            const response = await axios.put(
-                `/courses/update-course/${courseId}`,
-                courseData
-            );
-
-            if (response.status === 200) {
-                await fetchCourseDetails();
-                setShowEditModal(false);
-            }
-        } catch (error) {
-            console.error('Error updating course:', error);
-            setError(error.response?.data?.message || 'Failed to update course');
-        } finally {
-            setLoading(false);
->>>>>>> 7dd64ab7236d2d413916d3989d6ea64b0bb306a8
         }
     };
 
@@ -279,7 +212,6 @@ const CourseDetails = () => {
                 <h1>{course.course_title}</h1>
             </div>
 
-<<<<<<< HEAD
             {userRole === 'Instructor' && isOwner && (
                 <div className="tabs">
                     <button 
@@ -311,55 +243,6 @@ const CourseDetails = () => {
 
             <div className="content">
                 {renderContent()}
-=======
-            <div className="course-info-section">
-                <h2>Course Information</h2>
-                <div className="info-grid">
-                    <div className="info-item">
-                        <label>Instructor:</label>
-                        <span>{course.instructor_name || 'Unknown'}</span>
-                    </div>
-                    <div className="info-item">
-                        <label>Start Date:</label>
-                        <span>{course.start_date ? new Date(course.start_date).toLocaleDateString() : 'Not set'}</span>
-                    </div>
-                    <div className="info-item">
-                        <label>End Date:</label>
-                        <span>{course.end_date ? new Date(course.end_date).toLocaleDateString() : 'Not set'}</span>
-                    </div>
-                    <div className="info-item">
-                        <label>Duration:</label>
-                        <span>{course.duration ? `${course.duration} days` : 'Not specified'}</span>
-                    </div>
-                    <div className="info-item">
-                        <label>Status:</label>
-                        <span>{course.status || 'Unknown'}</span>
-                    </div>
-                </div>
-                <div className="description">
-                    <h3>Description</h3>
-                    <p>{course.description || 'No description available'}</p>
-                </div>
-            </div>
-
-            <div className="course-stats">
-                <div className="stat-item">
-                    <label>Total Enrolled</label>
-                    <span>{stats.totalEnrolled}</span>
-                </div>
-                <div className="stat-item">
-                    <label>Active Students</label>
-                    <span>{stats.activeStudents}</span>
-                </div>
-                <div className="stat-item">
-                    <label>Completed</label>
-                    <span>{stats.completedStudents}</span>
-                </div>
-                <div className="stat-item">
-                    <label>Average Progress</label>
-                    <span>{Math.round(stats.averageProgress)}%</span>
-                </div>
->>>>>>> 7dd64ab7236d2d413916d3989d6ea64b0bb306a8
             </div>
         </div>
     );

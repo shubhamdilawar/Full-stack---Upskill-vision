@@ -18,11 +18,8 @@ const AdminEditSuite = () => {
     const [approvedInstructors, setApprovedInstructors] = useState([]);
     const [newCourseCode, setNewCourseCode] = useState('');
     const [showAuditTrail, setShowAuditTrail] = useState(false);
-<<<<<<< HEAD
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [courseToDelete, setCourseToDelete] = useState(null);
-=======
->>>>>>> 7dd64ab7236d2d413916d3989d6ea64b0bb306a8
 
     useEffect(() => {
         fetchCourses();
@@ -41,7 +38,6 @@ const AdminEditSuite = () => {
 
     const fetchInstructors = async () => {
         try {
-<<<<<<< HEAD
             const token = localStorage.getItem('token');
             const response = await axios.get('/auth/instructors', {
                 headers: {
@@ -55,25 +51,6 @@ const AdminEditSuite = () => {
             }
         } catch (error) {
             console.error('Error fetching instructors:', error);
-=======
-            console.log('Fetching instructors...');
-            const response = await axios.get('/auth/instructors');
-            console.log('Instructor response:', response.data);
-            
-            if (response.data.instructors) {
-                const formattedInstructors = response.data.instructors.map(instructor => ({
-                    ...instructor,
-                    name: `${instructor.first_name} ${instructor.last_name}`.trim()
-                }));
-                setInstructors(formattedInstructors);
-            }
-        } catch (error) {
-            console.error('Error fetching instructors:', {
-                message: error.message,
-                response: error.response?.data,
-                status: error.response?.status
-            });
->>>>>>> 7dd64ab7236d2d413916d3989d6ea64b0bb306a8
         }
     };
 
@@ -133,7 +110,6 @@ const AdminEditSuite = () => {
     };
 
     const handleDeleteCourse = async (courseId) => {
-<<<<<<< HEAD
         try {
             console.log('Attempting to delete course:', courseId);
             const response = await axios.delete(`/courses/course/${courseId}`, {
@@ -154,22 +130,6 @@ const AdminEditSuite = () => {
         } catch (error) {
             console.error('Error deleting course:', error);
             alert('Failed to delete course. Please try again.');
-=======
-        if (window.confirm('Are you sure you want to delete this course? This action cannot be undone.')) {
-            try {
-                console.log('Attempting to delete course:', courseId);
-                const response = await axios.delete(`/courses/course/${courseId}`);
-                
-                if (response.status === 200) {
-                    console.log('Course deleted successfully');
-                    // Remove course from state
-                    setCourses(prevCourses => prevCourses.filter(course => course._id !== courseId));
-                }
-            } catch (error) {
-                console.error('Error deleting course:', error);
-                alert('Failed to delete course. Please try again.');
-            }
->>>>>>> 7dd64ab7236d2d413916d3989d6ea64b0bb306a8
         }
     };
 
@@ -350,16 +310,11 @@ const AdminEditSuite = () => {
                                 Edit
                             </button>
                             <button 
-<<<<<<< HEAD
                                 className="delete-btn"
                                 onClick={() => {
                                     setShowDeleteModal(true);
                                     setCourseToDelete(course._id);
                                 }}
-=======
-                                onClick={() => handleDeleteCourse(course._id)}
-                                className="delete-btn"
->>>>>>> 7dd64ab7236d2d413916d3989d6ea64b0bb306a8
                             >
                                 Delete
                             </button>
@@ -381,7 +336,6 @@ const AdminEditSuite = () => {
                     </div>
                 </div>
             )}
-<<<<<<< HEAD
 
             {showDeleteModal && (
                 <div className="delete-modal">
@@ -408,8 +362,6 @@ const AdminEditSuite = () => {
                     </div>
                 </div>
             )}
-=======
->>>>>>> 7dd64ab7236d2d413916d3989d6ea64b0bb306a8
         </div>
     );
 };

@@ -64,16 +64,37 @@ const CourseDetailsModal = ({ course, onClose }) => {
                             <h3>Course Information</h3>
                             <div className="info-grid">
                                 <div>
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 753245e39b3c3e4bdeac6ccfdf0b81815f1ef983
                                     <strong>Category:</strong> {course.category || 'Programming'}
                                 </div>
                                 <div>
                                     <strong>Difficulty:</strong> {course.difficulty_level || 'Intermediate'}
+<<<<<<< HEAD
+=======
+=======
+                                    <strong>Category:</strong> {course.category}
+                                </div>
+                                <div>
+                                    <strong>Difficulty:</strong> {course.difficulty_level}
+>>>>>>> 7dd64ab7236d2d413916d3989d6ea64b0bb306a8
+>>>>>>> 753245e39b3c3e4bdeac6ccfdf0b81815f1ef983
                                 </div>
                                 <div>
                                     <strong>Duration:</strong> {new Date(course.start_date).toLocaleDateString()} - {new Date(course.end_date).toLocaleDateString()}
                                 </div>
                                 <div>
+<<<<<<< HEAD
                                     <strong>Max Participants:</strong> {course.max_participants || '30'}
+=======
+<<<<<<< HEAD
+                                    <strong>Max Participants:</strong> {course.max_participants || '30'}
+=======
+                                    <strong>Max Participants:</strong> {course.max_participants}
+>>>>>>> 7dd64ab7236d2d413916d3989d6ea64b0bb306a8
+>>>>>>> 753245e39b3c3e4bdeac6ccfdf0b81815f1ef983
                                 </div>
                             </div>
                             <div className="description">
@@ -82,11 +103,25 @@ const CourseDetailsModal = ({ course, onClose }) => {
                             </div>
                             <div className="prerequisites">
                                 <h4>Prerequisites</h4>
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 753245e39b3c3e4bdeac6ccfdf0b81815f1ef983
                                 <p>{course.prerequisites || 'None' }</p>
                             </div>
                             <div className="learning-outcomes">
                                 <h4>Learning Outcomes</h4>
                                 <p>{course.learning_outcomes || 'Enhance skills'}</p>
+<<<<<<< HEAD
+=======
+=======
+                                <p>{course.prerequisites || 'None'}</p>
+                            </div>
+                            <div className="learning-outcomes">
+                                <h4>Learning Outcomes</h4>
+                                <p>{course.learning_outcomes}</p>
+>>>>>>> 7dd64ab7236d2d413916d3989d6ea64b0bb306a8
+>>>>>>> 753245e39b3c3e4bdeac6ccfdf0b81815f1ef983
                             </div>
                         </div>
 

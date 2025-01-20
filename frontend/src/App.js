@@ -12,10 +12,19 @@ import CourseOverview from './components/CourseOverview';
 import AdminEditSuite from './components/AdminEditSuite';
 import ProtectedRoute from './components/ProtectedRoute';
 import CourseDetails from './pages/CourseDetails';
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 753245e39b3c3e4bdeac6ccfdf0b81815f1ef983
 import CourseInsights from './components/CourseInsights';
 import StudentDetails from './components/StudentDetails';
 import ParticipantCourseDetails from './components/ParticipantCourseDetails';
 import QuizPage from './components/QuizPage';
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> 7dd64ab7236d2d413916d3989d6ea64b0bb306a8
+>>>>>>> 753245e39b3c3e4bdeac6ccfdf0b81815f1ef983
 
 function App() {
   return (
@@ -74,6 +83,10 @@ function App() {
             </ProtectedRoute>
           } 
         />
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 753245e39b3c3e4bdeac6ccfdf0b81815f1ef983
         <Route 
           path="/course/:courseId/insights" 
           element={
@@ -99,6 +112,11 @@ function App() {
             </ProtectedRoute>
           }
         />
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> 7dd64ab7236d2d413916d3989d6ea64b0bb306a8
+>>>>>>> 753245e39b3c3e4bdeac6ccfdf0b81815f1ef983
 
         {/* 404 Route */}
         <Route path="*" element={

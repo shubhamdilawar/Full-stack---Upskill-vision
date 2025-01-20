@@ -1,12 +1,28 @@
 import React, { useState, useEffect } from 'react';
 import axios from '../utils/axios';
 import '../styles/CourseOverview.css';
+<<<<<<< HEAD
 import CourseDetails from '../pages/CourseDetails';
+=======
+<<<<<<< HEAD
+import CourseDetails from '../pages/CourseDetails';
+=======
+import CourseDetails from './CourseDetails';
+>>>>>>> 7dd64ab7236d2d413916d3989d6ea64b0bb306a8
+>>>>>>> 753245e39b3c3e4bdeac6ccfdf0b81815f1ef983
 import CreateCourseModal from './CreateCourseModal';
 import ErrorBoundary from './ErrorBoundary';
 import EditCourseModal from './EditCourseModal';
 
+<<<<<<< HEAD
 const CourseOverview = ({ onViewDetails }) => {
+=======
+<<<<<<< HEAD
+const CourseOverview = ({ onViewDetails }) => {
+=======
+const CourseOverview = () => {
+>>>>>>> 7dd64ab7236d2d413916d3989d6ea64b0bb306a8
+>>>>>>> 753245e39b3c3e4bdeac6ccfdf0b81815f1ef983
     const [courses, setCourses] = useState([]);
     const [filter, setFilter] = useState('all');
     const [loading, setLoading] = useState(true);
@@ -347,7 +363,23 @@ const CourseOverview = ({ onViewDetails }) => {
                                 </div>
                                 {getProgressIndicator(course)}
                                 <div className="course-actions">
+<<<<<<< HEAD
                                     
+=======
+<<<<<<< HEAD
+                                    
+=======
+                                    {(!course.enrollment_status || course.enrollment_status === 'Not Enrolled') && (
+                                        <button 
+                                            onClick={() => handleEnroll(course._id || course.id)}
+                                            className="enroll-btn"
+                                            disabled={enrollingCourseId === course._id}
+                                        >
+                                            {enrollingCourseId === course._id ? 'Enrolling...' : 'Enroll'}
+                                        </button>
+                                    )}
+>>>>>>> 7dd64ab7236d2d413916d3989d6ea64b0bb306a8
+>>>>>>> 753245e39b3c3e4bdeac6ccfdf0b81815f1ef983
                                     {course.enrollment_status === 'enrolled' && (
                                         <button 
                                             onClick={() => handleComplete(course._id || course.id)}
@@ -357,6 +389,10 @@ const CourseOverview = ({ onViewDetails }) => {
                                             {completingCourseId === course._id ? 'Marking Complete...' : 'Mark Complete'}
                                         </button>
                                     )}
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 753245e39b3c3e4bdeac6ccfdf0b81815f1ef983
                                     {userRole === 'Participant' && (
                                         <button 
                                             className="view-details-btn"
@@ -375,6 +411,24 @@ const CourseOverview = ({ onViewDetails }) => {
                                             View Details
                                         </button>
                                     )}
+<<<<<<< HEAD
+=======
+=======
+                                    <button 
+                                        className="details-btn"
+                                        onClick={(e) => {
+                                            e.preventDefault();
+                                            e.stopPropagation();
+                                            if (course && (course._id || course.id)) {
+                                                handleViewDetails(course);
+                                            }
+                                        }}
+                                        disabled={!course || (!course._id && !course.id)}
+                                    >
+                                        View Details
+                                    </button>
+>>>>>>> 7dd64ab7236d2d413916d3989d6ea64b0bb306a8
+>>>>>>> 753245e39b3c3e4bdeac6ccfdf0b81815f1ef983
                                     {userRole === 'Instructor' && 
                                      course.instructor_id === localStorage.getItem('user_id') && (
                                         <>

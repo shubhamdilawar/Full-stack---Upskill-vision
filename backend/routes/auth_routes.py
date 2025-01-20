@@ -1,8 +1,19 @@
 from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify
 from datetime import datetime, timedelta
 import jwt
 from backend.db import users_collection
+import jwt
+from backend.db import users_collection
 from functools import wraps
+import os
+from dotenv import load_dotenv
+from bson import ObjectId
+import bcrypt
+
+load_dotenv()
+
+auth = Blueprint('auth', __name__)
 import os
 from dotenv import load_dotenv
 from bson import ObjectId
@@ -161,6 +172,11 @@ def get_current_user(current_user):
         return jsonify(user_data), 200
         
     except Exception as e:
+        print(f"Error in current_user: {str(e)}")
+        return jsonify({
+            'error': 'Failed to get user data',
+            'details': str(e)
+        }), 500
         print(f"Error in current_user: {str(e)}")
         return jsonify({
             'error': 'Failed to get user data',

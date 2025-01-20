@@ -375,43 +375,41 @@ def create_course(current_user):
             'error': 'Failed to create course',
             'details': str(e)
         }), 500
-    
-
 
 @courses.route('/<course_id>/details', methods=['GET'])
 @token_required
 def get_course_details(current_user, course_id):
     try:
         # Convert course_id to ObjectId
-            course_object_id = ObjectId(course_id)
+        course_object_id = ObjectId(course_id)
 
         # Get course details
-            course = courses_collection.find_one({'_id': course_object_id})
-            if not course:
-                  return jsonify({'error': 'Course not found'}), 404
+        course = courses_collection.find_one({'_id': course_object_id})
+        if not course:
+            return jsonify({'error': 'Course not found'}), 404
 
         # Get enrollments with student details
-            enrolled_students = []
-            enrollments = list(enrollments_collection.find({'course_id': str(course_id)}))
+        enrolled_students = []
+        enrollments = list(enrollments_collection.find({'course_id': str(course_id)}))
         
-            for enrollment in enrollments:
-               student = users_collection.find_one({'_id': ObjectId(enrollment['student_id'])})
-               if student:
+        for enrollment in enrollments:
+            student = users_collection.find_one({'_id': ObjectId(enrollment['student_id'])})
+            if student:
                 # Get assignment completion stats
-                 student_assignments = list(assignments_collection.find({
+                student_assignments = list(assignments_collection.find({
                     'course_id': str(course_id),
                     'student_id': str(student['_id']),
                     'status': 'completed'
                 }))
 
                 # Get quiz completion stats
-                 student_quizzes = list(quizzes_collection.find({
+                student_quizzes = list(quizzes_collection.find({
                     'course_id': str(course_id),
                     'student_id': str(student['_id']),
                     'status': 'completed'
                 }))
 
-                 enrolled_students.append({
+                enrolled_students.append({
                     'student_id': str(student['_id']),
                     'name': f"{student.get('first_name', '')} {student.get('last_name', '')}",
                     'email': student.get('email', ''),
@@ -435,11 +433,11 @@ def get_course_details(current_user, course_id):
                 })
 
         # Calculate overall stats
-            total_enrolled = len(enrolled_students)
-            stats = calculate_course_stats(enrolled_students, course_id)
+        total_enrolled = len(enrolled_students)
+        stats = calculate_course_stats(enrolled_students, course_id)
 
         # Format response using helper functions
-            response_data = {
+        response_data = {
             'course': {
                 '_id': str(course['_id']),
                 'course_title': course.get('course_title', ''),
@@ -461,7 +459,7 @@ def get_course_details(current_user, course_id):
             'stats': stats
         }
 
-            return jsonify(response_data), 200
+        return jsonify(response_data), 200
 
     except Exception as e:
         print(f"Error getting course details: {str(e)}")
@@ -648,7 +646,7 @@ def manage_modules(current_user, course_id):
         except Exception as e:
             print(f"Invalid ID format: {str(e)}")
             return jsonify({'error': 'Invalid course or user ID format'}), 400
-        
+
         # Verify course exists
         course = courses_collection.find_one({'_id': course_object_id})
         if not course:
@@ -2357,31 +2355,3 @@ def submit_assignment(current_user, course_id, assignment_id):
     except Exception as e:
         print(f"Error submitting assignment: {str(e)}")
         return jsonify({'error': 'Failed to submit assignment'}), 500
-
-@courses.route('/<course_id>/enrollments', methods=['GET'])
-@token_required
-def get_course_enrollments(current_user, course_id):
-    try:
-        # Get enrollments for the course
-        enrollments = enrollments_collection.find({'course_id': course_id})
-        
-        # Format enrollment data
-        formatted_enrollments = []
-        for enrollment in enrollments:
-            student_id = enrollment.get('student_id')
-            student = users_collection.find_one({'_id': ObjectId(student_id)})
-            
-            if student:
-                formatted_enrollments.append({
-                    'enrollment_id': str(enrollment['_id']),
-                    'student_id': student_id,
-                    'student_name': f"{student.get('first_name', '')} {student.get('last_name', '')}",
-                    'student_email': student.get('email'),
-                    'enrolled_date': enrollment.get('enrolled_date'),
-                    'status': enrollment.get('status')
-                })
-        
-        return jsonify({'enrollments': formatted_enrollments})
-    except Exception as e:
-        print(f"Error getting course enrollments: {str(e)}")
-        return jsonify({'error': str(e)}), 500

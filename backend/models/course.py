@@ -1,11 +1,14 @@
 from database import db
 from datetime import datetime
+from datetime import datetime
 
 class Course(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     course_id = db.Column(db.String, unique=True, nullable=False)
+    course_id = db.Column(db.String, unique=True, nullable=False)
     course_title = db.Column(db.String, nullable=False)
     description = db.Column(db.Text)
+    instructor_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     instructor_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     start_date = db.Column(db.Date)
     end_date = db.Column(db.Date)

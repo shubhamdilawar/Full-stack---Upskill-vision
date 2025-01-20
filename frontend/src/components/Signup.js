@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import axios from '../utils/axios';
 import "../styles/Signup.css";
 
 const Signup = () => {
@@ -10,7 +10,9 @@ const Signup = () => {
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const [role, setRole] = useState("");
-    const [errorMessage, setErrorMessage] = useState("");
+    const [error, setError] = useState("");
+    const [loading, setLoading] = useState(false);
+    const [success, setSuccess] = useState("");
 
     const navigate = useNavigate();
 
@@ -23,33 +25,63 @@ const Signup = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setLoading(true);
+        setError('');
 
+        // Validate passwords match
         if (password !== confirmPassword) {
-            alert("Passwords do not match.");
+            setError('Passwords do not match');
+            setLoading(false);
             return;
         }
 
-        const signupData = {
-            firstName,
-            lastName,
-            email,
-            password,
-            role,
-        };
-
         try {
-            const response = await axios.post("http://127.0.0.1:5000/auth/signup", signupData);
+            // First check if email is available
+            console.log('Checking email availability for:', email);
+            const checkEmailResponse = await axios.post('/auth/check-email', { 
+                email 
+            }, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            
+            console.log('Check email response:', checkEmailResponse.data);
 
-            if (response.status === 201) {
-                console.log("Signup successful:", response.data);
-                navigate("/");
-            } else {
-                console.error("Signup failed:", response.data.message);
-                setErrorMessage(response.data.message);
+            if (!checkEmailResponse.data.available) {
+                setError('This email is already registered. Please use a different email or try logging in.');
+                setLoading(false);
+                return;
+            }
+
+            // Proceed with signup
+            const response = await axios.post('/auth/signup', {
+                email,
+                password,
+                role,
+                firstName,
+                lastName
+            });
+
+            if (response.data.token) {
+                // Show success message
+                setSuccess('Account created successfully! Please wait for admin approval.');
+                setTimeout(() => {
+                    navigate('/login');
+                }, 3000);
             }
         } catch (error) {
-            console.error("Error during signup:", error);
-            setErrorMessage("An error occurred during signup. Please try again.");
+            console.error('Error during signup:', error);
+            if (error.response?.status === 404) {
+                console.error('Route not found:', error.config.url);
+            }
+            setError(
+                error.response?.data?.message || 
+                error.response?.data?.error || 
+                'Failed to create account. Please try again.'
+            );
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -63,10 +95,13 @@ const Signup = () => {
                 <h1>Create Account</h1>
                 <form onSubmit={handleSubmit}>
                     <label>Role</label>
-                    <select value={role} onChange={handleRoleChange} className="input-field dropdown" required>
-                        <option value="" disabled>
-                            Please Select
-                        </option>
+                    <select 
+                        value={role} 
+                        onChange={handleRoleChange} 
+                        className="input-field dropdown" 
+                        required
+                    >
+                        <option value="" disabled>Please Select</option>
                         <option value="HR Admin">HR Admin</option>
                         <option value="Instructor">Instructor</option>
                         <option value="Manager">Manager</option>
@@ -114,10 +149,15 @@ const Signup = () => {
                         required
                     />
 
-                    {errorMessage && <p className="error-message">{errorMessage}</p>}
+                    {error && <p className="error-message">{error}</p>}
+                    {success && <p className="success-message">{success}</p>}
 
-                    <button type="submit" className="signup-btn">
-                        Create Account
+                    <button 
+                        type="submit" 
+                        className="signup-btn"
+                        disabled={loading}
+                    >
+                        {loading ? 'Creating Account...' : 'Create Account'}
                     </button>
                 </form>
 

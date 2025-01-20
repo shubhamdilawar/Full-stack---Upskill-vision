@@ -1,15 +1,23 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/Login.css";
 import illustration from "../assets/login-illustration.png";
-import axios from 'axios';
+import axios from '../utils/axios';
 
 const Login = () => {
   const [role, setRole] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
   const navigate = useNavigate();
+  const channel = new BroadcastChannel('auth');
+
+  // Clear any existing auth data on mount
+  useEffect(() => {
+    localStorage.clear();
+    return () => channel.close();
+  }, []);
 
   const handleRoleChange = (e) => {
     setRole(e.target.value);
@@ -23,55 +31,64 @@ const Login = () => {
     setPassword(e.target.value);
   };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        setErrorMessage("");
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError('');
 
-        localStorage.removeItem("token");
-        localStorage.removeItem("role");
-        localStorage.removeItem("user_id");
+    try {
+        console.log('Sending login request:', { email, password, role });
+        const response = await axios.post('/auth/login', {
+            email,
+            password,
+            role
+        });
 
-        const loginData = { email, password, role };
+        console.log('Login response:', response.data);
 
-        try {
-            const response = await axios.post("http://127.0.0.1:5000/auth/login", loginData);
+        if (response.status === 200) {
+            localStorage.setItem('token', response.data.token);
+            localStorage.setItem('user_id', response.data.user_id);
+            localStorage.setItem('role', response.data.role);
+            localStorage.setItem('loginEvent', 'loggedIn');
 
-            if (response.status === 200) {
-                if (response.data.message === "Login successful!") {
-                    console.log("Login successful:", response.data);
-                    localStorage.setItem("token", response.data.token);
-                    localStorage.setItem("role", response.data.role);
-                    localStorage.setItem("user_id", response.data.user_id); // Store user ID
-                    if (response.data.role === "HR Admin") {
-                        navigate("/hr-admin-dashboard");
-                    } else if (response.data.role === "Instructor") {
-                        navigate("/instructor-dashboard"); // Redirect to the instructor dashboard
-                    } else if (response.data.role === "Manager") {
-                        navigate("/manager-dashboard");
-                    } else if (response.data.role === "Participant") {
-                        navigate("/dashboard");
-                    }
-                } else if (response.data.message === "Admin approval required") {
-                    setErrorMessage("Admin approval required. Please wait for confirmation.");
-                } else {
-                    setErrorMessage(response.data.message);
-                }
-            } else if (response.status === 403) {
-                setErrorMessage("Admin approval required. Please wait for confirmation.");
-            } else {
-                setErrorMessage("An error occurred during login. Please try again.");
-            }
-        } catch (error) {
-            console.error("Error during login:", error);
-            if (error.response && error.response.status === 403) {
-                setErrorMessage("Admin approval required. Please wait for confirmation.");
-            } else if (error.response && error.response.data && error.response.data.message) {
-                setErrorMessage(error.response.data.message);
-            } else {
-                setErrorMessage("An error occurred during login. Please try again.");
+            console.log('Login successful, redirecting...', response.data.role);
+
+            // Redirect based on role
+            switch (response.data.role) {
+                case 'HR Admin':
+                    console.log('Navigating to HR Admin Dashboard...');
+                    navigate('/hr-admin-dashboard');
+                    break;
+                case 'Manager':
+                    navigate('/manager-dashboard');
+                    break;
+                case 'Instructor':
+                    navigate('/instructor-dashboard');
+                    break;
+                case 'Participant':
+                    navigate('/dashboard');
+                    break;
+                default:
+                    setError('Invalid user role');
             }
         }
-    };
+    } catch (error) {
+        console.error('Login error:', error);
+        if (error.response?.status === 403) {
+            // Account not approved
+            setError(error.response.data.message || 'Your account is pending approval');
+        } else {
+            setError(
+                error.response?.data?.message || 
+                error.response?.data?.error || 
+                'Failed to login. Please check your credentials.'
+            );
+        }
+    } finally {
+        setLoading(false);
+    }
+  };
 
   return (
     <div className="login-container">
@@ -114,10 +131,14 @@ const Login = () => {
             required
           />
 
-          {errorMessage && <p className="error-message">{errorMessage}</p>}
+          {error && <p className="error-message">{error}</p>}
 
-          <button type="submit" className="login-btn">
-            Login
+          <button 
+            type="submit" 
+            className="login-btn"
+            disabled={loading}
+          >
+            {loading ? 'Logging in...' : 'Login'}
           </button>
         </form>
 

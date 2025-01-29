@@ -1,21 +1,12 @@
 import axios from 'axios';
 
 const instance = axios.create({
-    baseURL: 'http://127.0.0.1:5000',
+    baseURL: 'http://localhost:5000/api',
     headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json'
-<<<<<<< HEAD
     },
     withCredentials: true
-=======
-<<<<<<< HEAD
-    },
-    withCredentials: true
-=======
-    }
->>>>>>> 7dd64ab7236d2d413916d3989d6ea64b0bb306a8
->>>>>>> 753245e39b3c3e4bdeac6ccfdf0b81815f1ef983
 });
 
 instance.interceptors.request.use(
@@ -24,13 +15,6 @@ instance.interceptors.request.use(
         if (token) {
             config.headers.Authorization = `Bearer ${token}`;
         }
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-=======
-        console.log('Making request to:', config.baseURL + config.url);
->>>>>>> 7dd64ab7236d2d413916d3989d6ea64b0bb306a8
->>>>>>> 753245e39b3c3e4bdeac6ccfdf0b81815f1ef983
         return config;
     },
     (error) => {
@@ -38,25 +22,18 @@ instance.interceptors.request.use(
     }
 );
 
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-=======
 instance.interceptors.response.use(
-    (response) => {
-        console.log(`API Response [${response.config.url}]:`, response.data);
-        return response;
-    },
+    (response) => response,
     (error) => {
-        console.error(`API Error [${error.config?.url}]:`, {
-            status: error.response?.status,
-            data: error.response?.data,
-            message: error.message
-        });
+        if (error.response?.status === 404) {
+            console.error('API endpoint not found:', error.config.url);
+        }
+        if (error.response?.status === 500) {
+            console.error('Server error:', error.response?.data);
+            error.message = error.response?.data?.message || 'An unexpected error occurred';
+        }
         return Promise.reject(error);
     }
 );
 
->>>>>>> 7dd64ab7236d2d413916d3989d6ea64b0bb306a8
->>>>>>> 753245e39b3c3e4bdeac6ccfdf0b81815f1ef983
 export default instance; 

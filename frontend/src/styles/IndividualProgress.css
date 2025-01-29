@@ -1,0 +1,304 @@
+.individual-progress {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    background: #f8f9fa;
+    font-family: 'Arial', sans-serif; /* Added a default font */
+}
+
+.progress-header {
+    display: flex;
+    justify-content: center; /* Center the heading */
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.progress-header h2 {
+    color: #2c3e50; /* Darker header color */
+    margin: 0;
+    font-weight: 700; /* Bold header font */
+    font-size: 1.7rem; /* Increased h2 font size*/
+}
+
+.view-controls {
+    display: flex;
+    gap: 0.75rem;
+}
+
+.view-controls button {
+    padding: 0.6rem 1rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: #555;
+    font-weight: 500;
+}
+
+.view-controls button.active {
+    background: #3498db;
+    color: white;
+    border-color: #3498db; /* Active button border */
+}
+
+
+.stats-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+     grid-template-rows: auto auto;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.stat-card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    text-align: center;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08); /* More refined shadow */
+    border: 1px solid #eee; /* Subtle border */
+    transition: transform 0.2s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-3px); /* Elevate on hover */
+}
+
+.stat-card h3 {
+    margin: 0;
+    color: #555; /* Slightly darker h3 */
+    font-size: 1rem;
+}
+
+.stat-card p {
+    margin: 0.5rem 0 0;
+    font-size: 1.8rem; /* Slightly smaller paragraph font */
+    font-weight: 600;
+}
+
+.stat-card.completed p {
+    color: #27ae60;
+}
+
+.stat-card.in-progress p {
+    color: #3498db;
+}
+
+
+.charts-section {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+.chart-container {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08); /* Refined chart shadow */
+    border: 1px solid #eee; /* Subtle chart border */
+}
+
+.chart-container h3 {
+    margin: 0 0 1rem;
+    color: #333;
+     font-size: 1.1rem; /* Smaller chart header font size*/
+    font-weight: 500;
+}
+
+.courses-list-container{
+    display: flex;
+     flex-direction: column;
+    background: white;
+      padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08); /* Refined shadow */
+    border: 1px solid #eee; /* Subtle border */
+    gap: 1rem;
+}
+
+.courses-header {
+    display: flex;
+    justify-content: space-between;
+     align-items: center;
+     margin-bottom: 1rem;
+}
+
+.courses-header h3{
+    color: #2c3e50;
+   font-weight: 500;
+   margin-bottom: 0;
+
+}
+.courses-header .view-controls {
+    display: flex;
+    gap: 0.5rem;
+}
+
+
+.courses-list {
+   display: flex;
+   flex-direction: column;
+   gap: 0.75rem;
+}
+
+.course-progress-card {
+    padding: 1.5rem;
+    border: 1px solid #eee;
+     border-radius: 8px;
+}
+
+.course-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.course-info h4 {
+    margin: 0;
+     color: #2c3e50;
+    font-weight: 500;
+}
+
+.status-badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.875rem;
+}
+
+.status-badge.completed {
+    background: #e8f5e9;
+    color: #27ae60;
+}
+
+.status-badge.in-progress {
+    background: #e3f2fd;
+    color: #3498db;
+}
+
+.progress-details {
+    margin-bottom: 1rem;
+}
+
+.progress-bar {
+     height: 10px;
+     background: #f0f0f0;
+      border-radius: 5px;
+    overflow: hidden;
+     margin-bottom: 0.5rem;
+}
+
+.progress-fill {
+    height: 100%;
+    background: #3498db;
+    transition: width 0.3s ease;
+    border-radius: 4px;
+}
+
+.progress-text {
+     font-size: 0.875rem;
+     color: #666;
+}
+
+.performance-metrics {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+     margin-top: 1rem;
+    padding-top: 1rem;
+     border-top: 1px solid #eee;
+}
+
+.metric {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+     font-size: 0.875rem;
+}
+
+.metric span:first-child {
+    color: #777;
+}
+
+.metric span:last-child {
+    font-weight: 500;
+    color: #444;
+}
+
+@media (max-width: 768px) {
+    .progress-header {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .view-controls {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .charts-section {
+        grid-template-columns: 1fr;
+    }
+}
+
+.loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 400px;
+    font-size: 1.2rem;
+    color: #666;
+}
+
+.error {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 400px;
+     color: #d32f2f;
+    font-size: 1.2rem;
+    text-align: center;
+    padding: 2rem;
+     background: #ffebee;
+    border-radius: 8px;
+    margin: 2rem;
+}
+
+.overall-stats {
+    display: flex;
+    gap: 2rem;
+     margin-bottom: 2rem;
+     justify-content: center;
+}
+
+.overall-stats .stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+     padding: 1.5rem;
+    border-radius: 8px;
+    text-align: center;
+     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08); /* More refined shadow */
+    border: 1px solid #eee; /* Subtle border */
+      transition: transform 0.2s ease;
+     background: white;
+}
+
+.overall-stats .stat:hover {
+    transform: translateY(-3px); /* Elevate on hover */
+}
+
+.overall-stats .stat span {
+    font-size: 0.875rem;
+    color: #666;
+}
+
+.overall-stats .stat strong {
+    font-size: 1.3rem;
+     color: #2c3e50; /* Improved strong color */
+    font-weight: 600;
+}

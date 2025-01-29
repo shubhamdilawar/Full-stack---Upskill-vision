@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/ForgotPassword.css";
+import axios from '../utils/axios';
 
 const ForgotPassword = () => {
   const [stage, setStage] = useState(1); // 1: Enter Email, 2: Enter OTP, 3: Reset Password
@@ -14,23 +15,17 @@ const ForgotPassword = () => {
   const handleEmailSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch("http://127.0.0.1:5000/auth/forgot-password", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
-      });
+      const response = await axios.post('/auth/forgot-password', { email });
 
-      const result = await response.json();
-
-      if (response.ok) {
-        alert(result.message); // Show success message
-        setStage(2); // Move to OTP stage
+      if (response.status === 200) {
+        alert(response.data.message);
+        setStage(2);
       } else {
-        alert(result.message); // Show error (e.g., Email not registered)
+        alert(response.data.message);
       }
     } catch (error) {
-      console.error("Error during email submission:", error);
-      alert("An error occurred. Please try again.");
+      console.error('Error during email submission:', error);
+      alert(error.response?.data?.message || 'An error occurred. Please try again.');
     }
   };
 
@@ -38,23 +33,17 @@ const ForgotPassword = () => {
   const handleOtpSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch("http://127.0.0.1:5000/auth/verify-otp", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, otp }),
-      });
+      const response = await axios.post('/auth/verify-otp', { email, otp });
 
-      const result = await response.json();
-
-      if (response.ok) {
-        alert(result.message); // Show success message
-        setStage(3); // Move to Reset Password stage
+      if (response.status === 200) {
+        alert(response.data.message);
+        setStage(3);
       } else {
-        alert(result.message); // Show error (e.g., Invalid OTP)
+        alert(response.data.message);
       }
     } catch (error) {
       console.error("Error during OTP verification:", error);
-      alert("An error occurred. Please try again.");
+      alert(error.response?.data?.message || "An error occurred. Please try again.");
     }
   };
 
@@ -62,30 +51,27 @@ const ForgotPassword = () => {
   const handlePasswordReset = async (e) => {
     e.preventDefault();
 
-    // Check if passwords match
     if (newPassword !== confirmPassword) {
       alert("Passwords do not match.");
       return;
     }
 
     try {
-      const response = await fetch("http://127.0.0.1:5000/auth/reset-password", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, newPassword }),
+      const response = await axios.post('/auth/reset-password', {
+        email,
+        otp,
+        new_password: newPassword
       });
 
-      const result = await response.json();
-
-      if (response.ok) {
-        alert(result.message); // Show success message
-        navigate("/"); // Redirect to login page
+      if (response.status === 200) {
+        alert(response.data.message);
+        navigate("/login");
       } else {
-        alert(result.message); // Show error
+        alert(response.data.message);
       }
     } catch (error) {
       console.error("Error during password reset:", error);
-      alert("An error occurred. Please try again.");
+      alert(error.response?.data?.message || "An error occurred. Please try again.");
     }
   };
 

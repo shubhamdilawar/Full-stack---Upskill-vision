@@ -2,11 +2,12 @@ from flask import Blueprint, jsonify, request
 from datetime import datetime
 from bson import ObjectId
 from functools import wraps
-from flask_cors import cross_origin
+from flask_cors import cross_origin, CORS
 from .auth_routes import token_required
 from ..db import audit_log_collection, users_collection, courses_collection
 
 audit = Blueprint('audit', __name__)
+CORS(audit, resources={r"/api/audit/*": {"origins": "http://localhost:3000"}})
 
 def log_action(user_id, action_type, course_id, details):
     """Helper function to log actions"""
@@ -28,9 +29,11 @@ def log_action(user_id, action_type, course_id, details):
 def get_audit_trail(current_user):
     if request.method == "OPTIONS":
         response = jsonify({'message': 'OK'})
+        response.headers.add('Access-Control-Allow-Origin', 'http://localhost:3000')
         response.headers.add('Access-Control-Allow-Methods', 'GET, OPTIONS')
         response.headers.add('Access-Control-Allow-Headers', 'Content-Type, Authorization')
-        return response, 200
+        response.headers.add('Access-Control-Allow-Credentials', 'true')
+        return response
         
     try:
         if current_user['role'] not in ['HR Admin', 'Instructor']:
@@ -136,13 +139,18 @@ def get_audit_trail(current_user):
         total_logs = audit_log_collection.count_documents(filters)
         total_pages = (total_logs + per_page - 1) // per_page
 
-        return jsonify({
+        response = jsonify({
             'audit_logs': audit_logs,
             'page': page,
             'per_page': per_page,
             'total_pages': total_pages,
             'total_records': total_logs
-        }), 200
+        })
+
+        # Add CORS headers
+        response.headers.add('Access-Control-Allow-Origin', 'http://localhost:3000')
+        response.headers.add('Access-Control-Allow-Credentials', 'true')
+        return response
 
     except Exception as e:
         print(f"Error fetching audit trail: {str(e)}")

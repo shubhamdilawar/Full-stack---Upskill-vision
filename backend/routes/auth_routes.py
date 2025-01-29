@@ -13,13 +13,6 @@ import bcrypt
 
 load_dotenv()
 
-auth = Blueprint('auth', __name__)
-import os
-from dotenv import load_dotenv
-from bson import ObjectId
-import bcrypt
-
-load_dotenv()
 
 auth = Blueprint('auth', __name__)
 

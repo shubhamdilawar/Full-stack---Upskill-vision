@@ -44,6 +44,12 @@ const ParticipantCourseDetails = () => {
         progress: 0
     });
 
+    useEffect(() => {
+        if (courseId) {
+            fetchCourseDetails();
+        }
+    }, [courseId]);
+
     const fetchCourseDetails = async () => {
         try {
             const response = await axios.get(`/courses/${courseId}/viewdetails`);
@@ -55,7 +61,15 @@ const ParticipantCourseDetails = () => {
                     _id: String(data.course?._id || ''),
                     title: String(data.course?.title || ''),
                     description: String(data.course?.description || ''),
-                    instructor_name: String(data.course?.instructor_name || ''),
+                    category: String(data.course?.category || 'N/A'),
+                    difficulty_level: String(data.course?.difficulty_level || 'N/A'),
+                    prerequisites: String(data.course?.prerequisites || 'N/A'),
+                    learning_outcomes: String(data.course?.learning_outcomes || 'N/A'),
+                    max_participants: Number(data.course?.max_participants || 0),
+                    instructor_name: String(data.course?.instructor_name || 'N/A'),
+                    instructor_image: String(data.course?.instructor_image || null),
+                    instructor_title: String(data.course?.instructor_title || ''),
+                    instructor_bio: String(data.course?.instructor_bio || ''),
                     duration: Number(data.course?.duration || 0),
                     start_date: data.course?.start_date || null,
                     end_date: data.course?.end_date || null,
@@ -76,7 +90,8 @@ const ParticipantCourseDetails = () => {
                     description: String(assignment.description || ''),
                     due_date: assignment.due_date || null,
                     status: String(assignment.status || 'pending'),
-                    score: assignment.score !== null ? Number(assignment.score) : null
+                    score: assignment.score !== null ? Number(assignment.score) : null,
+                    submission_date: assignment.submission_date || null
                 })) : [],
                 quizzes: Array.isArray(data.quizzes) ? data.quizzes.map(quiz => ({
                     _id: String(quiz._id || ''),
@@ -102,10 +117,6 @@ const ParticipantCourseDetails = () => {
             setLoading(false);
         }
     };
-
-    useEffect(() => {
-        fetchCourseDetails();
-    }, [courseId]);
 
     const handleEnroll = async () => {
         try {
@@ -245,14 +256,14 @@ const ParticipantCourseDetails = () => {
                                         <span className="highlight-icon">✍️</span>
                                         <div className="highlight-content">
                                             <h4>Assignments</h4>
-                                            <p>{courseData.assignments.filter(a => a.status === 'completed').length} of {courseData.assignments.length} Completed</p>
+                                           <p>{courseData.assignments.filter(a => a.status === 'completed').length} of {courseData.assignments.length} Completed</p>
                                         </div>
                                     </div>
                                     <div className="highlight-item">
                                         <span className="highlight-icon">📝</span>
                                         <div className="highlight-content">
                                             <h4>Quizzes</h4>
-                                            <p>{courseData.quizzes.filter(q => q.status === 'completed').length} of {courseData.quizzes.length} Completed</p>
+                                           <p>{courseData.quizzes.filter(q => q.status === 'completed').length} of {courseData.quizzes.length} Completed</p>
                                         </div>
                                     </div>
                                 </div>
@@ -528,7 +539,7 @@ const ParticipantCourseDetails = () => {
                                                 </div>
                                             )}
                                             {assignment.submission_date && (
-                                                <div className="stat-item">
+                                               <div className="stat-item">
                                                     <span className="stat-icon">📤</span>
                                                     <div className="stat-content">
                                                         <h4>Submitted On</h4>
@@ -548,7 +559,7 @@ const ParticipantCourseDetails = () => {
                                     <div key={quiz._id} className="quiz-item">
                                         <div className="quiz-header">
                                             <h3>{quiz.title}</h3>
-                                            {quiz.status === 'completed' && (
+                                             {quiz.status === 'completed' && (
                                                 <div className={`status-badge ${quiz.passed ? 'passed' : 'failed'}`}>
                                                     {quiz.passed ? 'Passed' : 'Failed'}
                                                 </div>
@@ -565,7 +576,7 @@ const ParticipantCourseDetails = () => {
                                                     <p>{quiz.time_limit} minutes</p>
                                                 </div>
                                             </div>
-                                            {quiz.status === 'completed' && (
+                                              {quiz.status === 'completed' && (
                                                 <>
                                                     <div className="stat-item">
                                                         <span className="stat-icon">📊</span>
@@ -617,52 +628,33 @@ const ParticipantCourseDetails = () => {
                                 <span className="meta-icon">🏷️</span>
                                 <div className="meta-content">
                                     <h4>Category</h4>
-                                    <p>{courseData.course.category || 'General'}</p>
+                                    <p className="category-text">{courseData.course.category}</p>
                                 </div>
                             </div>
                             <div className="meta-item">
                                 <span className="meta-icon">📊</span>
                                 <div className="meta-content">
                                     <h4>Difficulty Level</h4>
-                                    <p>{courseData.course.difficulty_level || 'Intermediate'}</p>
+                                    <p className="difficulty-text">{courseData.course.difficulty_level}</p>
                                 </div>
                             </div>
                             <div className="meta-item">
                                 <span className="meta-icon">⏱️</span>
                                 <div className="meta-content">
                                     <h4>Duration</h4>
-                                    <p>{courseData.course.duration} days</p>
+                                    <p className="duration-text">{courseData.course.duration} days</p>
                                 </div>
                             </div>
                         </div>
 
                         <div className="prerequisites-section">
                             <h3>Prerequisites</h3>
-                            {courseData.course.prerequisites ? (
-                                <ul className="prerequisites-list">
-                                    {courseData.course.prerequisites.map((prereq, index) => (
-                                        <li key={index}>{prereq}</li>
-                                    ))}
-                                </ul>
-                            ) : (
-                                <p>No specific prerequisites required</p>
-                            )}
+                            <p>{courseData.course?.prerequisites || 'None'}</p>
                         </div>
 
                         <div className="learning-outcomes">
                             <h3>Learning Outcomes</h3>
-                            {courseData.course.learning_outcomes ? (
-                                <ul className="outcomes-list">
-                                    {courseData.course.learning_outcomes.map((outcome, index) => (
-                                        <li key={index}>
-                                            <span className="outcome-icon">✨</span>
-                                            {outcome}
-                                        </li>
-                                    ))}
-                                </ul>
-                            ) : (
-                                <p>Learning outcomes will be provided by the instructor</p>
-                            )}
+                            <p className="learning-outcomes-text">{courseData.course.learning_outcomes}</p>
                         </div>
 
                         <div className="course-highlights">
@@ -670,14 +662,16 @@ const ParticipantCourseDetails = () => {
                                 <span className="highlight-icon">🎯</span>
                                 <div className="highlight-content">
                                     <h4>Start Date</h4>
-                                    <p>{new Date(courseData.course.start_date).toLocaleDateString()}</p>
+                                     {courseData.course.start_date && <p>{new Date(courseData.course.start_date).toLocaleDateString()}</p>}
+
                                 </div>
                             </div>
                             <div className="highlight-item">
                                 <span className="highlight-icon">🏁</span>
                                 <div className="highlight-content">
                                     <h4>End Date</h4>
-                                    <p>{new Date(courseData.course.end_date).toLocaleDateString()}</p>
+                                    {courseData.course.end_date && <p>{new Date(courseData.course.end_date).toLocaleDateString()}</p>}
+
                                 </div>
                             </div>
                         </div>
@@ -686,7 +680,7 @@ const ParticipantCourseDetails = () => {
                     <div className="instructor-card">
                         <h2>About the Instructor</h2>
                         <div className="instructor-profile">
-                            <div className="instructor-avatar">
+                           <div className="instructor-avatar">
                                 {courseData.course.instructor_image ? (
                                     <img src={courseData.course.instructor_image} alt="Instructor" />
                                 ) : (
@@ -716,4 +710,4 @@ const ParticipantCourseDetails = () => {
     );
 };
 
-export default ParticipantCourseDetails; 
+export default ParticipantCourseDetails;

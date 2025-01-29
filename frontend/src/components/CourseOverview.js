@@ -1,28 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import axios from '../utils/axios';
 import '../styles/CourseOverview.css';
-<<<<<<< HEAD
 import CourseDetails from '../pages/CourseDetails';
-=======
-<<<<<<< HEAD
-import CourseDetails from '../pages/CourseDetails';
-=======
-import CourseDetails from './CourseDetails';
->>>>>>> 7dd64ab7236d2d413916d3989d6ea64b0bb306a8
->>>>>>> 753245e39b3c3e4bdeac6ccfdf0b81815f1ef983
 import CreateCourseModal from './CreateCourseModal';
 import ErrorBoundary from './ErrorBoundary';
 import EditCourseModal from './EditCourseModal';
-
-<<<<<<< HEAD
 const CourseOverview = ({ onViewDetails }) => {
-=======
-<<<<<<< HEAD
-const CourseOverview = ({ onViewDetails }) => {
-=======
-const CourseOverview = () => {
->>>>>>> 7dd64ab7236d2d413916d3989d6ea64b0bb306a8
->>>>>>> 753245e39b3c3e4bdeac6ccfdf0b81815f1ef983
     const [courses, setCourses] = useState([]);
     const [filter, setFilter] = useState('all');
     const [loading, setLoading] = useState(true);
@@ -37,11 +20,9 @@ const CourseOverview = () => {
     const [deletingCourseId, setDeletingCourseId] = useState(null);
     const [showEditModal, setShowEditModal] = useState(false);
     const [selectedCourseForEdit, setSelectedCourseForEdit] = useState(null);
-
     useEffect(() => {
         fetchCourses();
     }, [filter]);
-
     useEffect(() => {
         if (courses.length > 0) {
             const filtered = courses.filter(course => 
@@ -53,12 +34,10 @@ const CourseOverview = () => {
             setFilteredCourses([]);
         }
     }, [searchTerm, courses]);
-
     useEffect(() => {
         const role = localStorage.getItem('role');
         setUserRole(role);
     }, []);
-
     const fetchCourses = async () => {
         try {
             console.log('Fetching courses with filter:', filter);
@@ -78,7 +57,6 @@ const CourseOverview = () => {
                     enrollment_status: course.enrollment_status || 'Not Enrolled',
                     progress: Number(course.progress) || 0
                 }));
-
                 console.log('Cleaned courses:', cleanedCourses);
                 setCourses(cleanedCourses);
                 setFilteredCourses(cleanedCourses);
@@ -92,15 +70,12 @@ const CourseOverview = () => {
             setLoading(false);
         }
     };
-
     const handleEnroll = async (courseId) => {
         try {
             setEnrollingCourseId(courseId);
             console.log('Enrolling in course:', courseId); // Debug log
-
             const response = await axios.post(`/courses/enroll/${courseId}`);
             console.log('Enrollment response:', response); // Debug log
-
             if (response.status === 200) {
                 // Show success message
                 setError(null);
@@ -119,7 +94,6 @@ const CourseOverview = () => {
             setEnrollingCourseId(null);
         }
     };
-
     const handleComplete = async (courseId) => {
         try {
             setCompletingCourseId(courseId);
@@ -135,7 +109,6 @@ const CourseOverview = () => {
             setCompletingCourseId(null);
         }
     };
-
     const getProgressIndicator = (course) => {
         if (course?.enrollment_status === 'enrolled') {
             const startDate = new Date(course.start_date);
@@ -155,26 +128,22 @@ const CourseOverview = () => {
         }
         return null;
     };
-
     const handleViewDetails = (course) => {
         try {
             // Add debug logs
             console.log('View Details clicked for course:', course);
-
             // Validate course data
             if (!course) {
                 console.error('Course data is null or undefined');
                 setError('Invalid course data');
                 return;
             }
-
             // Ensure course has an _id
             if (!course._id && !course.id) {
                 console.error('Course is missing ID:', course);
                 setError('Course data is invalid');
                 return;
             }
-
             // Create a clean course object with all required fields
             const cleanCourse = {
                 _id: course._id || course.id, // Handle both _id and id
@@ -188,7 +157,6 @@ const CourseOverview = () => {
                 enrollment_status: course.enrollment_status || 'Not Enrolled',
                 progress: Number(course.progress) || 0
             };
-
             console.log('Setting selected course:', cleanCourse);
             setSelectedCourse(cleanCourse);
             setError(null);
@@ -197,7 +165,6 @@ const CourseOverview = () => {
             setError('Failed to view course details');
         }
     };
-
     const handleDelete = async (course) => {
         try {
             // Validate course object and ID
@@ -206,7 +173,6 @@ const CourseOverview = () => {
                 setError('Cannot delete course: Invalid course data');
                 return;
             }
-
             // Get the correct course ID
             const courseId = course._id || course.id;
             
@@ -217,14 +183,11 @@ const CourseOverview = () => {
                 userRole: localStorage.getItem('role'),
                 userId: localStorage.getItem('user_id')
             });
-
             // Confirm deletion
             if (!window.confirm(`Are you sure you want to delete "${course.course_title}"?`)) {
                 return;
             }
-
             setDeletingCourseId(courseId);
-
             const response = await axios.delete(`/courses/delete_course/${courseId}`);
             
             if (response.status === 200) {
@@ -244,14 +207,12 @@ const CourseOverview = () => {
             setDeletingCourseId(null);
         }
     };
-
     const isValidCourse = (course) => {
         return course && 
                typeof course === 'object' && 
                course._id && 
                typeof course._id === 'string';
     };
-
     const handleEditCourse = (course) => {
         try {
             if (!course || (!course._id && !course.id)) {
@@ -259,7 +220,6 @@ const CourseOverview = () => {
                 setError('Cannot edit course: Invalid course data');
                 return;
             }
-
             // Create a clean course object for editing
             const cleanCourse = {
                 _id: course._id || course.id,
@@ -272,7 +232,6 @@ const CourseOverview = () => {
                 duration: Number(course.duration) || 0,
                 status: course.status || 'active'
             };
-
             console.log('Setting course for edit:', cleanCourse);
             setSelectedCourseForEdit(cleanCourse);
             setShowEditModal(true);
@@ -281,7 +240,6 @@ const CourseOverview = () => {
             setError('Failed to prepare course for editing');
         }
     };
-
     const handleCourseUpdate = async (updatedCourse) => {
         try {
             await fetchCourses(); // Refresh the courses list
@@ -291,7 +249,6 @@ const CourseOverview = () => {
             setError('Failed to refresh courses');
         }
     };
-
     const calculateDuration = (startDate, endDate) => {
         if (!startDate || !endDate) return 0;
         const start = new Date(startDate);
@@ -300,7 +257,6 @@ const CourseOverview = () => {
         const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
         return diffDays;
     };
-
     if (loading) {
         return (
             <div className="loading">
@@ -310,11 +266,9 @@ const CourseOverview = () => {
             </div>
         );
     }
-
     if (error) {
         return <div className="error">{error}</div>;
     }
-
     return (
         <div className="course-overview">
             <div className="course-controls">
@@ -339,7 +293,6 @@ const CourseOverview = () => {
                     />
                 </div>
             </div>
-
             <div className="courses-grid">
                 {filteredCourses.length > 0 ? (
                     filteredCourses.map(course => {
@@ -363,23 +316,7 @@ const CourseOverview = () => {
                                 </div>
                                 {getProgressIndicator(course)}
                                 <div className="course-actions">
-<<<<<<< HEAD
                                     
-=======
-<<<<<<< HEAD
-                                    
-=======
-                                    {(!course.enrollment_status || course.enrollment_status === 'Not Enrolled') && (
-                                        <button 
-                                            onClick={() => handleEnroll(course._id || course.id)}
-                                            className="enroll-btn"
-                                            disabled={enrollingCourseId === course._id}
-                                        >
-                                            {enrollingCourseId === course._id ? 'Enrolling...' : 'Enroll'}
-                                        </button>
-                                    )}
->>>>>>> 7dd64ab7236d2d413916d3989d6ea64b0bb306a8
->>>>>>> 753245e39b3c3e4bdeac6ccfdf0b81815f1ef983
                                     {course.enrollment_status === 'enrolled' && (
                                         <button 
                                             onClick={() => handleComplete(course._id || course.id)}
@@ -389,10 +326,6 @@ const CourseOverview = () => {
                                             {completingCourseId === course._id ? 'Marking Complete...' : 'Mark Complete'}
                                         </button>
                                     )}
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> 753245e39b3c3e4bdeac6ccfdf0b81815f1ef983
                                     {userRole === 'Participant' && (
                                         <button 
                                             className="view-details-btn"
@@ -411,24 +344,6 @@ const CourseOverview = () => {
                                             View Details
                                         </button>
                                     )}
-<<<<<<< HEAD
-=======
-=======
-                                    <button 
-                                        className="details-btn"
-                                        onClick={(e) => {
-                                            e.preventDefault();
-                                            e.stopPropagation();
-                                            if (course && (course._id || course.id)) {
-                                                handleViewDetails(course);
-                                            }
-                                        }}
-                                        disabled={!course || (!course._id && !course.id)}
-                                    >
-                                        View Details
-                                    </button>
->>>>>>> 7dd64ab7236d2d413916d3989d6ea64b0bb306a8
->>>>>>> 753245e39b3c3e4bdeac6ccfdf0b81815f1ef983
                                     {userRole === 'Instructor' && 
                                      course.instructor_id === localStorage.getItem('user_id') && (
                                         <>
@@ -470,7 +385,6 @@ const CourseOverview = () => {
                     </div>
                 )}
             </div>
-
             {/* Course Details Modal */}
             {selectedCourse && selectedCourse._id && (
                 <ErrorBoundary key={`error-boundary-${selectedCourse._id}`}>
@@ -484,7 +398,6 @@ const CourseOverview = () => {
                     />
                 </ErrorBoundary>
             )}
-
             {userRole === 'Instructor' && (
                 <div className="create-course-section">
                     <button 
@@ -495,7 +408,6 @@ const CourseOverview = () => {
                     </button>
                 </div>
             )}
-
             {showCreateModal && (
                 <CreateCourseModal 
                     onClose={() => setShowCreateModal(false)}
@@ -505,7 +417,6 @@ const CourseOverview = () => {
                     }}
                 />
             )}
-
             {showEditModal && selectedCourseForEdit && (
                 <EditCourseModal
                     course={selectedCourseForEdit}
@@ -516,7 +427,6 @@ const CourseOverview = () => {
                     onUpdate={handleCourseUpdate}
                 />
             )}
-
             {error && (
                 <div className="error-message">
                     {error}
@@ -525,5 +435,4 @@ const CourseOverview = () => {
         </div>
     );
 };
-
 export default CourseOverview; 

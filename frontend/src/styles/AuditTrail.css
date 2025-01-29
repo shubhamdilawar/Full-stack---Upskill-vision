@@ -88,10 +88,6 @@
 .audit-table td:nth-child(2) {
     font-weight: 500;
     color: #1976d2;
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> 753245e39b3c3e4bdeac6ccfdf0b81815f1ef983
 }
 
 .action-type {
@@ -147,9 +143,4 @@
 
 .audit-table tr:hover {
     background-color: #f5f5f5;
-<<<<<<< HEAD
-=======
-=======
->>>>>>> 7dd64ab7236d2d413916d3989d6ea64b0bb306a8
->>>>>>> 753245e39b3c3e4bdeac6ccfdf0b81815f1ef983
 } 

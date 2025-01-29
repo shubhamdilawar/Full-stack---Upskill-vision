@@ -23,10 +23,36 @@ const Signup = () => {
     const handleConfirmPasswordChange = (e) => setConfirmPassword(e.target.value);
     const handleRoleChange = (e) => setRole(e.target.value);
 
+    // Add email validation function
+    const isValidEmail = (email) => {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+    };
+
+    // Add password strength validation
+    const isStrongPassword = (password) => {
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+        return passwordRegex.test(password);
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
         setError('');
+
+        // Email validation
+        if (!isValidEmail(email)) {
+            setError('Please enter a valid email address');
+            setLoading(false);
+            return;
+        }
+
+        // Password strength validation
+        if (!isStrongPassword(password)) {
+            setError('Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one special character');
+            setLoading(false);
+            return;
+        }
 
         // Validate passwords match
         if (password !== confirmPassword) {
@@ -40,46 +66,43 @@ const Signup = () => {
             console.log('Checking email availability for:', email);
             const checkEmailResponse = await axios.post('/auth/check-email', { 
                 email 
-            }, {
-                headers: {
-                    'Content-Type': 'application/json'
-                }
             });
-            
-            console.log('Check email response:', checkEmailResponse.data);
 
             if (!checkEmailResponse.data.available) {
-                setError('This email is already registered. Please use a different email or try logging in.');
+                setError('Email is already registered');
                 setLoading(false);
                 return;
             }
 
             // Proceed with signup
-            const response = await axios.post('/auth/signup', {
+            const signupResponse = await axios.post('/auth/signup', {
+                firstName,
+                lastName,
                 email,
                 password,
-                role,
-                firstName,
-                lastName
+                role
             });
 
-            if (response.data.token) {
-                // Show success message
-                setSuccess('Account created successfully! Please wait for admin approval.');
+            if (signupResponse.status === 201) {
+                setSuccess('Signup successful! Waiting for admin approval.');
+                setError('');
+                
+                // Clear form
+                setFirstName('');
+                setLastName('');
+                setEmail('');
+                setPassword('');
+                setConfirmPassword('');
+                setRole('');
+                
+                // Redirect to login after 3 seconds
                 setTimeout(() => {
                     navigate('/login');
                 }, 3000);
             }
         } catch (error) {
-            console.error('Error during signup:', error);
-            if (error.response?.status === 404) {
-                console.error('Route not found:', error.config.url);
-            }
-            setError(
-                error.response?.data?.message || 
-                error.response?.data?.error || 
-                'Failed to create account. Please try again.'
-            );
+            console.error('Signup error:', error);
+            setError(error.response?.data?.message || 'An error occurred during signup. Please try again.');
         } finally {
             setLoading(false);
         }

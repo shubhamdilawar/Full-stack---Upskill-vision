@@ -7,27 +7,12 @@ import CourseOverview from './CourseOverview';
 
 const Dashboard = () => {
     const [userRole, setUserRole] = useState(null);
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-=======
-    const [courses, setCourses] = useState([]);
->>>>>>> 7dd64ab7236d2d413916d3989d6ea64b0bb306a8
->>>>>>> 753245e39b3c3e4bdeac6ccfdf0b81815f1ef983
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const navigate = useNavigate();
     const [channel] = useState(new BroadcastChannel('auth'));
-<<<<<<< HEAD
     
     
-=======
-<<<<<<< HEAD
-    
-    
-=======
->>>>>>> 7dd64ab7236d2d413916d3989d6ea64b0bb306a8
->>>>>>> 753245e39b3c3e4bdeac6ccfdf0b81815f1ef983
 
     useEffect(() => {
         const handleStorageChange = (event) => {
@@ -49,7 +34,6 @@ const Dashboard = () => {
                 const response = await axios.get('/auth/current_user');
                 if (response.status === 200) {
                     setUserRole(response.data.role);
-<<<<<<< HEAD
                 }
                 setLoading(false);
             } catch (error) {
@@ -60,45 +44,6 @@ const Dashboard = () => {
         };
 
         fetchUserData();
-=======
-<<<<<<< HEAD
-=======
-                }
-            } catch (error) {
-                console.error("Error fetching user data:", error);
-            }
-        };
-
-        const fetchCourses = async () => {
-            try {
-                const response = await axios.get('/courses/courses');
-                if (response.data && Array.isArray(response.data.courses)) {
-                    setCourses(response.data.courses);
-                }
-                setLoading(false);
-            } catch (error) {
-                console.error("Error fetching courses:", error);
-                setError('Error fetching courses');
-                setCourses([]);
-                setLoading(false);
-                if (error.response?.status === 401) {
-                    navigate('/login');
->>>>>>> 7dd64ab7236d2d413916d3989d6ea64b0bb306a8
-                }
-                setLoading(false);
-            } catch (error) {
-                console.error("Error fetching user data:", error);
-                setError("Failed to load user data");
-                setLoading(false);
-            }
-        };
-
-        fetchUserData();
-<<<<<<< HEAD
-=======
-        fetchCourses();
->>>>>>> 7dd64ab7236d2d413916d3989d6ea64b0bb306a8
->>>>>>> 753245e39b3c3e4bdeac6ccfdf0b81815f1ef983
 
         channel.onmessage = (event) => {
             if (event.data === 'logout') {
@@ -117,20 +62,20 @@ const Dashboard = () => {
 
     const handleLogout = () => {
         try {
-            localStorage.removeItem("token");
-            localStorage.removeItem("role");
-            localStorage.removeItem("user_id");
-            localStorage.removeItem("loginEvent");
-            
             if (channel) {
-                channel.postMessage('logout');
+                try {
+                    channel.postMessage('logout');
+                } catch (error) {
+                    console.log('Channel already closed');
+                }
                 channel.close();
             }
-            
-            navigate("/");
+            localStorage.clear();
+            navigate('/login');
         } catch (error) {
             console.error('Error during logout:', error);
-            navigate("/");
+            localStorage.clear();
+            navigate('/login');
         }
     };
     const handleViewDetails = (courseId) => {
@@ -152,14 +97,6 @@ const Dashboard = () => {
     };
 
     
-
-    if (loading) {
-        return <div className="loading">Loading...</div>;
-    }
-
-    if (error) {
-        return <div className="error">{error}</div>;
-    }
 
     return (
         <div className="dashboard-container">
@@ -185,19 +122,20 @@ const Dashboard = () => {
             </div>
 
             <div className="content">
-<<<<<<< HEAD
                 <CourseOverview onViewDetails={handleViewDetails} />
-=======
-<<<<<<< HEAD
-                <CourseOverview onViewDetails={handleViewDetails} />
-=======
-                <CourseOverview />
->>>>>>> 7dd64ab7236d2d413916d3989d6ea64b0bb306a8
->>>>>>> 753245e39b3c3e4bdeac6ccfdf0b81815f1ef983
             </div>
             
             <div className="inspirational-quote">
                 "The best way to predict the future is to create it." — Peter Drucker
+            </div>
+
+            <div className="dashboard-actions">
+                <button 
+                    className="progress-btn"
+                    onClick={() => navigate('/progress')}
+                >
+                    View Learning Progress
+                </button>
             </div>
         </div>
     );

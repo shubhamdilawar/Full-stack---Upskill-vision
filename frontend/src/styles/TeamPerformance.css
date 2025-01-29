@@ -1,0 +1,141 @@
+.team-performance {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    background: #f8f9fa;
+     font-family: 'Arial', sans-serif;
+}
+
+.performance-header {
+    margin-bottom: 2rem;
+}
+
+.performance-header h2 {
+    color: #2c3e50;
+    font-size: 1.7rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+.filters-section {
+    display: flex;
+     flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    background: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.filters-section select,
+.filters-section input {
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 0.9rem;
+}
+
+.apply-filters {
+    padding: 0.75rem 1.5rem;
+    background: #1976d2;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.apply-filters:hover {
+    background: #1565c0;
+}
+
+.team-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.member-card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08); /* Refined shadow */
+      border: 1px solid #eee;
+}
+
+.member-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.member-header h3 {
+    margin: 0;
+    color: #2c3e50;
+    font-size: 1.2rem;
+}
+
+.status {
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+}
+
+.status.active {
+    background: #e3f2fd;
+    color: #1976d2;
+}
+
+.status.completed {
+    background: #e8f5e9;
+    color: #2e7d32;
+}
+
+.progress-section {
+    margin-bottom: 1.5rem;
+}
+
+.progress-label {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.progress-bar {
+    height: 8px;
+    background: #eee;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: #1976d2;
+    transition: width 0.3s ease;
+}
+
+.metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+}
+
+.metric {
+    text-align: center;
+}
+
+.metric span {
+    display: block;
+    font-size: 0.85rem;
+    color: #666;
+    margin-bottom: 0.25rem;
+}
+
+.metric strong {
+    font-size: 1.1rem;
+    color: #2c3e50;
+}

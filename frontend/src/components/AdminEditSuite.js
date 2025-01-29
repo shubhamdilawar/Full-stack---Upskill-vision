@@ -18,16 +18,9 @@ const AdminEditSuite = () => {
     const [approvedInstructors, setApprovedInstructors] = useState([]);
     const [newCourseCode, setNewCourseCode] = useState('');
     const [showAuditTrail, setShowAuditTrail] = useState(false);
-<<<<<<< HEAD
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [courseToDelete, setCourseToDelete] = useState(null);
-=======
-<<<<<<< HEAD
-    const [showDeleteModal, setShowDeleteModal] = useState(false);
-    const [courseToDelete, setCourseToDelete] = useState(null);
-=======
->>>>>>> 7dd64ab7236d2d413916d3989d6ea64b0bb306a8
->>>>>>> 753245e39b3c3e4bdeac6ccfdf0b81815f1ef983
+
 
     useEffect(() => {
         fetchCourses();
@@ -46,10 +39,7 @@ const AdminEditSuite = () => {
 
     const fetchInstructors = async () => {
         try {
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> 753245e39b3c3e4bdeac6ccfdf0b81815f1ef983
+
             const token = localStorage.getItem('token');
             const response = await axios.get('/auth/instructors', {
                 headers: {
@@ -63,9 +53,7 @@ const AdminEditSuite = () => {
             }
         } catch (error) {
             console.error('Error fetching instructors:', error);
-<<<<<<< HEAD
-=======
-=======
+
             console.log('Fetching instructors...');
             const response = await axios.get('/auth/instructors');
             console.log('Instructor response:', response.data);
@@ -77,15 +65,7 @@ const AdminEditSuite = () => {
                 }));
                 setInstructors(formattedInstructors);
             }
-        } catch (error) {
-            console.error('Error fetching instructors:', {
-                message: error.message,
-                response: error.response?.data,
-                status: error.response?.status
-            });
->>>>>>> 7dd64ab7236d2d413916d3989d6ea64b0bb306a8
->>>>>>> 753245e39b3c3e4bdeac6ccfdf0b81815f1ef983
-        }
+        } 
     };
 
     const handleInputChange = (e) => {
@@ -144,10 +124,7 @@ const AdminEditSuite = () => {
     };
 
     const handleDeleteCourse = async (courseId) => {
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> 753245e39b3c3e4bdeac6ccfdf0b81815f1ef983
+
         try {
             console.log('Attempting to delete course:', courseId);
             const response = await axios.delete(`/courses/course/${courseId}`, {
@@ -168,25 +145,7 @@ const AdminEditSuite = () => {
         } catch (error) {
             console.error('Error deleting course:', error);
             alert('Failed to delete course. Please try again.');
-<<<<<<< HEAD
-=======
-=======
-        if (window.confirm('Are you sure you want to delete this course? This action cannot be undone.')) {
-            try {
-                console.log('Attempting to delete course:', courseId);
-                const response = await axios.delete(`/courses/course/${courseId}`);
-                
-                if (response.status === 200) {
-                    console.log('Course deleted successfully');
-                    // Remove course from state
-                    setCourses(prevCourses => prevCourses.filter(course => course._id !== courseId));
-                }
-            } catch (error) {
-                console.error('Error deleting course:', error);
-                alert('Failed to delete course. Please try again.');
-            }
->>>>>>> 7dd64ab7236d2d413916d3989d6ea64b0bb306a8
->>>>>>> 753245e39b3c3e4bdeac6ccfdf0b81815f1ef983
+
         }
     };
 
@@ -367,22 +326,13 @@ const AdminEditSuite = () => {
                                 Edit
                             </button>
                             <button 
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> 753245e39b3c3e4bdeac6ccfdf0b81815f1ef983
+
                                 className="delete-btn"
                                 onClick={() => {
                                     setShowDeleteModal(true);
                                     setCourseToDelete(course._id);
                                 }}
-<<<<<<< HEAD
-=======
-=======
-                                onClick={() => handleDeleteCourse(course._id)}
-                                className="delete-btn"
->>>>>>> 7dd64ab7236d2d413916d3989d6ea64b0bb306a8
->>>>>>> 753245e39b3c3e4bdeac6ccfdf0b81815f1ef983
+
                             >
                                 Delete
                             </button>
@@ -404,10 +354,7 @@ const AdminEditSuite = () => {
                     </div>
                 </div>
             )}
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> 753245e39b3c3e4bdeac6ccfdf0b81815f1ef983
+
 
             {showDeleteModal && (
                 <div className="delete-modal">
@@ -434,11 +381,7 @@ const AdminEditSuite = () => {
                     </div>
                 </div>
             )}
-<<<<<<< HEAD
-=======
-=======
->>>>>>> 7dd64ab7236d2d413916d3989d6ea64b0bb306a8
->>>>>>> 753245e39b3c3e4bdeac6ccfdf0b81815f1ef983
+
         </div>
     );
 };

@@ -381,7 +381,7 @@ def create_course(current_user):
 def get_course_details(current_user, course_id):
     try:
         # Convert course_id to ObjectId
-        course_object_id = ObjectId(course_id)
+            course_object_id = ObjectId(course_id)
 
         # Get course details
         course = courses_collection.find_one({'_id': course_object_id})

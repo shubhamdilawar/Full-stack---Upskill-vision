@@ -19,6 +19,9 @@ import os
 import requests
 import jwt
 from functools import wraps
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 
 courses = Blueprint('courses', __name__)
 
@@ -359,35 +362,97 @@ def debug_courses():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
+def send_course_creation_email(instructor_email, course_data):
+    try:
+        print(f"Attempting to send email to: {instructor_email}")  # Debug log
+        
+        message = MIMEMultipart()
+        message["From"] = Config.EMAIL_ADDRESS
+        message["To"] = instructor_email
+        message["Subject"] = "Course Created Successfully"
+
+        # Create email body with course details
+        body = f"""
+        Dear {course_data.get('instructor_name', 'Instructor')},
+
+        Your course has been created successfully. Here are the details:
+
+        Course Title: {course_data['course_title']}
+        Description: {course_data['description']}
+        Start Date: {course_data['start_date']}
+        End Date: {course_data['end_date']}
+        Duration: {course_data.get('duration', 60)} minutes
+        Maximum Participants: {course_data.get('max_participants', 30)}
+        Category: {course_data.get('category', 'general')}
+        Difficulty Level: {course_data.get('difficulty_level', 'beginner')}
+
+        You can now start adding modules and content to your course.
+
+        Best regards,
+        Upskill Vision Team
+        """
+        
+        message.attach(MIMEText(body, "plain"))
+
+        try:
+            with smtplib.SMTP(Config.SMTP_SERVER, Config.SMTP_PORT) as server:
+                print("Connecting to SMTP server...")  # Debug log
+                server.starttls()
+                print("Starting TLS...")  # Debug log
+                server.login(Config.EMAIL_ADDRESS, Config.EMAIL_PASSWORD)
+                print("Logged in successfully...")  # Debug log
+                server.send_message(message)
+                print("Email sent successfully!")  # Debug log
+                return True
+        except smtplib.SMTPException as smtp_error:
+            print(f"SMTP Error: {str(smtp_error)}")
+            return False
+            
+    except Exception as e:
+        print(f"Error sending course creation email: {str(e)}")
+        return False
+
+def log_instructor_action(user_id, course_id, action_type, details):
+    """Helper function to log instructor actions"""
+    try:
+        # Convert ObjectIds to strings if they aren't already
+        user_id = str(user_id) if user_id else None
+        course_id = str(course_id) if course_id else None
+        
+        log_entry = {
+            'user_id': user_id,
+            'course_id': course_id,
+            'action_type': action_type,
+            'details': details,
+            'timestamp': datetime.utcnow()
+        }
+        audit_log_collection.insert_one(log_entry)
+    except Exception as e:
+        print(f"Error logging action: {str(e)}")
+
 @courses.route('/create_course', methods=['POST', 'OPTIONS'])
 @token_required
 def create_course(current_user):
-    if request.method == "OPTIONS":
-        response = jsonify({'message': 'OK'})
-        response.headers.add('Access-Control-Allow-Origin', 'http://localhost:3000')
-        response.headers.add('Access-Control-Allow-Methods', 'POST, OPTIONS')
-        response.headers.add('Access-Control-Allow-Headers', 'Content-Type, Authorization')
-        response.headers.add('Access-Control-Allow-Credentials', 'true')
-        return response, 200
-
     try:
-        # Get course data from request
         data = request.get_json()
-        print(f"Received course data: {data}")
+        print(f"Submitting course with instructor details: {data}")
 
-        # Verify instructor permission
+        if not data or 'course_title' not in data:
+            return jsonify({'error': 'Missing required course data'}), 400
+
         if current_user['role'] not in ['Instructor', 'HR Admin']:
             return jsonify({'error': 'Unauthorized to create courses'}), 403
 
-        # Create course document
+        # Create course document with string IDs
         course_data = {
             'course_title': data['course_title'],
             'description': data['description'],
-            'instructor_name': data['instructor_name'],
-            'instructor_id': data['instructor_id'],
+            'instructor_id': data.get('instructor_id'),  # Get from request data
+            'instructor_name': data.get('instructor_name'),  # Get from request data
+            'instructor_email': data.get('instructor_email'),  # Get from request data
             'start_date': data['start_date'],
             'end_date': data['end_date'],
-            'duration': 60,  # Default duration in minutes
+            'duration': 60,
             'created_at': datetime.utcnow(),
             'status': 'active',
             'category': data.get('category', 'general'),
@@ -401,7 +466,7 @@ def create_course(current_user):
             'course_materials': data.get('course_materials', [])
         }
 
-        print(f"Creating course: {course_data}")
+        print(f"Course data before saving: {course_data}")  # Debug log
 
         # Insert course into database
         result = courses_collection.insert_one(course_data)
@@ -422,16 +487,44 @@ def create_course(current_user):
 
         # Log the action
         log_instructor_action(
-            current_user['user_id'],
+            str(current_user.get('user_id')),
             course_id,
             'create_course',
             f"Course '{data['course_title']}' created"
         )
 
-        return jsonify({
+        # Send email notification with debug logs
+        instructor_email = data.get('instructor_email')  # Get from request data
+        print(f"Instructor email from data: {instructor_email}")  # Debug log
+        
+        if instructor_email:
+            print(f"Preparing to send email to {instructor_email}")  # Debug log
+            try:
+                email_course_data = {
+                    **course_data,
+                    'created_at': course_data['created_at'].isoformat(),
+                    '_id': course_id
+                }
+                email_sent = send_course_creation_email(instructor_email, email_course_data)
+                if not email_sent:
+                    print("Warning: Failed to send course creation email")
+                else:
+                    print(f"Email sent successfully to {instructor_email}")  # Debug log
+            except Exception as email_error:
+                print(f"Error during email sending: {str(email_error)}")
+
+        # Prepare response data
+        response_data = {
             'message': 'Course created successfully',
-            'course_id': course_id
-        }), 201
+            'course_id': course_id,
+            'course': {
+                '_id': course_id,
+                **{k: (v.isoformat() if isinstance(v, datetime) else str(v) if isinstance(v, ObjectId) else v) 
+                   for k, v in course_data.items()}
+            }
+        }
+
+        return jsonify(response_data), 201
 
     except Exception as e:
         print(f"Error creating course: {str(e)}")
@@ -892,20 +985,6 @@ def calculate_performance(enrollment):
         return 'average'
     else:
         return 'poor'
-
-def log_instructor_action(instructor_id, course_id, action, description):
-    """Helper function to log instructor actions"""
-    try:
-        log_entry = {
-            'instructor_id': instructor_id,
-            'course_id': course_id,
-            'action': action,
-            'description': description,
-            'timestamp': datetime.utcnow()
-        }
-        audit_log_collection.insert_one(log_entry)
-    except Exception as e:
-        print(f"Error logging instructor action: {str(e)}")
 
 @courses.route('/update-course/<course_id>', methods=['PUT', 'OPTIONS'])
 @token_required

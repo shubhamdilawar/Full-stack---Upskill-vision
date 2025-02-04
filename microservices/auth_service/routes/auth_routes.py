@@ -591,8 +591,8 @@ def forgot_password():
 
     except Exception as e:
         print(f"Error in forgot password: {str(e)}")
-        return jsonify({'message': 'Failed to process request'}), 500
-    
+        return jsonify({'message': 'Failed to process request'}), 500   
+     
 @auth.route('/verify-otp', methods=['POST'])
 @cross_origin()
 def verify_otp():
